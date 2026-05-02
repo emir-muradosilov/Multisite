@@ -1,0 +1,92 @@
+{% extends 'tenants/base_tenant.html' %}
+
+{% block content %}
+
+<h1 class="mb-4">Dashboard — {{ city.name }}</h1>
+
+<div class="row">
+
+    <div class="col-md-3">
+        <div class="card text-bg-primary mb-3">
+            <div class="card-body">
+                <h5 class="card-title">Всего заявок</h5>
+                <h2>{{ total_leads }}</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card text-bg-success mb-3">
+            <div class="card-body">
+                <h5 class="card-title">Сегодня</h5>
+                <h2>{{ today_leads }}</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card text-bg-warning mb-3">
+            <div class="card-body">
+                <h5 class="card-title">За 30 дней</h5>
+                <h2>{{ month_leads }}</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card text-bg-dark mb-3">
+            <div class="card-body">
+                <h5 class="card-title">Конверсия</h5>
+                <h2>{{ conversion }}%</h2>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<hr>
+
+<h3>Качество заявок</h3>
+
+<div class="row">
+
+    <div class="col-md-4">
+        <div class="card border-success mb-3">
+            <div class="card-body">
+                <h5>Целевые</h5>
+                <h3>{{ target_count }}</h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card border-danger mb-3">
+            <div class="card-body">
+                <h5>Спам</h5>
+                <h3>{{ spam_count }}</h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card border-secondary mb-3">
+            <div class="card-body">
+                <h5>Не дозвон</h5>
+                <h3>{{ no_answer_count }}</h3>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<hr>
+
+<h3>Источники</h3>
+
+{% for stat in utm_stats %}
+    <p>{{ stat.utm_source|default:"Без источника" }} — {{ stat.count }}</p>
+{% empty %}
+    <p>Нет данных</p>
+{% endfor %}
+
+{% endblock %}

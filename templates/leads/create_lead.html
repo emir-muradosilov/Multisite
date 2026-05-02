@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block title %}
+{{ city.seo_title }}
+{% endblock %}
+
+{% block description %}
+{{ city.seo_description }}
+{% endblock %}
+
+{% block keywords %}
+{{ city.seo_keywords }}
+{% endblock %}
+
+{% block content %}
+
+<h1>Оставить заявку - {{ city.name }}</h1>
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Отправить</button>
+</form>
+
+
+
+{% endblock %}

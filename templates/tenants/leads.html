@@ -1,0 +1,86 @@
+{% extends 'tenants/base_tenant.html' %}
+
+{% block content %}
+
+<h1 class="mb-4">Заявки — {{ city.name }}</h1>
+
+<!-- ФИЛЬТРЫ -->
+<form method="get" class="mb-3 d-flex gap-2">
+
+    <select name="date" class="form-select w-auto">
+        <option value="">Все</option>
+        <option value="today" {% if date_filter == "today" %}selected{% endif %}>
+            Сегодня
+        </option>
+    </select>
+
+    <select name="source" class="form-select w-auto">
+        <option value="">Все источники</option>
+        {% for s in sources %}
+            <option value="{{ s }}" {% if s == source_filter %}selected{% endif %}>
+                {{ s|default:"Без источника" }}
+            </option>
+        {% endfor %}
+    </select>
+
+    <button type="submit" class="btn btn-primary">Фильтр</button>
+</form>
+
+<!-- ТАБЛИЦА -->
+<table class="table table-hover table-bordered align-middle">
+    <thead class="table-light">
+        <tr>
+            <th>Дата</th>
+            <th>Имя</th>
+            <th>Телефон</th>
+            <th>Услуга</th>
+            <th>Источник</th>
+            <th>Ключ</th>
+            <th>Статус</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        {% for lead in leads %}
+        <tr>
+            <td>{{ lead.created_at|date:"d.m H:i" }}</td>
+
+            <td>{{ lead.name }}</td>
+
+            <td>
+                <a href="tel:{{ lead.phone }}">
+                    {{ lead.phone }}
+                </a>
+            </td>
+
+            <td>{{ lead.service }}</td>
+
+            <td>{{ lead.utm_source|default:"—" }}</td>
+
+            <td>{{ lead.utm_term|default:"—" }}</td>
+
+            <td>
+                <form method="post" action="/dashboard/leads/{{ lead.id }}/status/">
+                    {% csrf_token %}
+                    <select name="status" class="form-select form-select-sm" onchange="this.form.submit()">
+
+                        {% for value, label in lead.STATUS_CHOICES %}
+                            <option value="{{ value }}" {% if lead.status == value %}selected{% endif %}>
+                                {{ label }}
+                            </option>
+                        {% endfor %}
+
+                    </select>
+                </form>
+            </td>
+
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="7" class="text-center">Заявок нет</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}

@@ -1,0 +1,26 @@
+{% extends 'tenants/base_tenant.html' %}
+
+{% block content %}
+<h1>Настройки — {{ city.name }}</h1>
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Сохранить</button>
+</form>
+
+
+<h3>Подключение Telegram</h3>
+
+<p>1. Откройте нашего бота в Telegram</p>
+<p>2. Нажмите /start</p>
+<p>3. Перейдите по ссылке:</p>
+
+<p>
+https://api.telegram.org/botВАШ_ТОКЕН/getUpdates
+</p>
+
+<p>4. Найдите "chat": { "id": XXXXX }</p>
+<p>5. Вставьте сюда</p>
+
+{% endblock %}

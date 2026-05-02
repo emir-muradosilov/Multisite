@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<!-- HERO -->
+<div class="bg-light p-5 rounded mb-4">
+    <h1 class="display-5">
+        Алмазное бурение в {{ city.name }}
+    </h1>
+
+    <p class="lead">
+        Быстро. Чисто. Без пыли. Выезд в день обращения.
+    </p>
+
+    <a href="/{{ city.slug }}/lead/" class="btn btn-primary btn-lg">
+        Оставить заявку
+    </a>
+</div>
+
+<!-- УСЛУГИ -->
+<h2>Наши услуги</h2>
+
+<div class="row mb-4">
+
+    <div class="col-md-4">
+        <div class="card p-3 mb-3">
+            <h5>Алмазное бурение</h5>
+            <p>Отверстия любой сложности</p>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card p-3 mb-3">
+            <h5>Канатная резка</h5>
+            <p>Работаем с любыми материалами</p>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card p-3 mb-3">
+            <h5>Резка проёмов</h5>
+            <p>Быстро и аккуратно</p>
+        </div>
+    </div>
+
+</div>
+
+<!-- ПРЕИМУЩЕСТВА -->
+<h2>Почему выбирают нас</h2>
+
+<ul class="mb-4">
+    <li>✔ Опыт более 5 лет</li>
+    <li>✔ Работаем без пыли</li>
+    <li>✔ Гарантия качества</li>
+    <li>✔ Выезд в день обращения</li>
+</ul>
+
+<!-- ФОРМА -->
+<div class="card p-4 mb-4">
+    <h3>Оставить заявку</h3>
+
+    <form method="post" action="/{{ city.slug }}/lead/">
+        {% csrf_token %}
+
+        <input type="text" name="name" class="form-control mb-2" placeholder="Ваше имя" required>
+        <input type="text" name="phone" class="form-control mb-2" placeholder="Телефон" required>
+
+        <button class="btn btn-success w-100">
+            Отправить заявку
+        </button>
+    </form>
+</div>
+
+<!-- КОНТАКТЫ -->
+<h2>Контакты</h2>
+
+<p><b>Телефон:</b> {{ city.phone }}</p>
+<p><b>Адрес:</b> {{ city.address }}</p>
+<p><b>Цены:</b> {{ city.price_text }}</p>
+
+{% endblock %}

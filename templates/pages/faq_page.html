@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block extra_head %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "{{ faq.question|escapejs }}",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "{{ faq.answer|escapejs }}"
+      }
+    }
+  ]
+}
+</script>
+{% endblock %}
+{% block title %}
+{{ faq.seo_title }}
+{% endblock %}
+
+{% block description %}
+{{ faq.seo_description }}
+{% endblock %}
+
+{% block content %}
+
+
+
+<h1>{{ faq.question }}</h1>
+
+<p>{{ faq.answer }}</p>
+{% endblock %}

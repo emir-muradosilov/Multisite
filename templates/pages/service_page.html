@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<!-- TITLE -->
+<h1 class="mb-3">
+    {{ page.title }} в {{ city.name }}
+</h1>
+
+<p class="lead">
+    Профессиональные услуги в {{ city.name }}. Работаем быстро и аккуратно.
+</p>
+
+<!-- CTA -->
+<a href="/{{ city.slug }}/lead/" class="btn btn-primary mb-4">
+    Оставить заявку
+</a>
+
+<!-- ОПИСАНИЕ -->
+<div class="mb-4">
+    {{ page.content|safe }}
+</div>
+
+<!-- ПРЕИМУЩЕСТВА -->
+<h2>Наши преимущества</h2>
+
+<ul class="mb-4">
+    <li>✔ Опыт более 5 лет</li>
+    <li>✔ Работаем без пыли</li>
+    <li>✔ Быстрый выезд</li>
+    <li>✔ Гарантия качества</li>
+</ul>
+
+<!-- ФОРМА -->
+<div class="card p-4 mb-4">
+    <h3>Оставить заявку</h3>
+
+    <form method="post" action="/{{ city.slug }}/lead/">
+        {% csrf_token %}
+
+        <input type="text" name="name" class="form-control mb-2" placeholder="Ваше имя" required>
+        <input type="text" name="phone" class="form-control mb-2" placeholder="Телефон" required>
+
+        <button class="btn btn-success w-100">
+            Отправить заявку
+        </button>
+    </form>
+</div>
+
+<!-- КОНТАКТЫ -->
+<h3>Контакты</h3>
+
+<p><b>Телефон:</b> {{ city.phone }}</p>
+<p><b>Адрес:</b> {{ city.address }}</p>
+
+{% endblock %}
