@@ -1,81 +1,137 @@
 {% extends 'base.html' %}
 
+{% block title %}{{ city.seo_title|default:"Алмазное бурение в России" }}{% endblock %}
+{% block description %}{{ city.seo_description|default:"Профессиональные услуги алмазного бурения и резки. Работаем быстро, аккуратно и с гарантией." }}{% endblock %}
+{% block keywords %}{{ city.seo_keywords|default:"алмазное бурение, резка бетона, демонтаж" }}{% endblock %}
+{% block extra_head %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "LocalBusiness",
+  "name": "{{ city.seo_title|default:city.name|escapejs }}",
+  "address": "{{ city.address|default:'Россия'|escapejs }}",
+  "areaServed": "{{ city.name|escapejs }}",
+  "telephone": "{{ city.phone|default:''|escapejs }}"
+}
+</script>
+{% endblock %}
+
 {% block content %}
-
-<!-- HERO -->
-<div class="bg-light p-5 rounded mb-4">
-    <h1 class="display-5">
-        Алмазное бурение в {{ city.name }}
-    </h1>
-
-    <p class="lead">
-        Быстро. Чисто. Без пыли. Выезд в день обращения.
-    </p>
-
-    <a href="/{{ city.slug }}/lead/" class="btn btn-primary btn-lg">
-        Оставить заявку
-    </a>
-</div>
-
-<!-- УСЛУГИ -->
-<h2>Наши услуги</h2>
-
-<div class="row mb-4">
-
-    <div class="col-md-4">
-        <div class="card p-3 mb-3">
-            <h5>Алмазное бурение</h5>
-            <p>Отверстия любой сложности</p>
-        </div>
+<section class="content-card p-4 mb-4">
+    <h1 class="display-5 fw-bold mb-3">{{ city.h1_title|default:"Алмазное бурение в"|add:" "|add:city.name }}</h1>
+    <p class="lead mb-4">Работаем по договору, соблюдаем сроки и фиксируем смету до старта работ.</p>
+    <div class="d-flex gap-2 flex-wrap">
+        <a href="/{{ city.slug }}/lead/" class="btn btn-primary btn-sm">Оставить заявку</a>
+        {% if city.phone %}<a href="tel:{{ city.phone }}" class="btn btn-outline-light btn-lg">Позвонить</a>{% endif %}
     </div>
+</section>
 
-    <div class="col-md-4">
-        <div class="card p-3 mb-3">
-            <h5>Канатная резка</h5>
-            <p>Работаем с любыми материалами</p>
-        </div>
+
+
+<section class="mb-4">
+    <div class="row g-3">
+        <div class="col-md-3"><div class="content-card p-4 mb-4"><strong>от 5 лет</strong><br><span class="muted">опыт специалистов</span></div></div>
+        <div class="col-md-3"><div class="content-card p-4 mb-4"><strong>24/7</strong><br><span class="muted">прием заявок</span></div></div>
+        <div class="col-md-3"><div class="content-card p-4 mb-4"><strong>до 12 мес.</strong><br><span class="muted">гарантия на работы</span></div></div>
+        <div class="col-md-3"><div class="content-card p-4 mb-4"><strong>1 день</strong><br><span class="muted">выезд на объект</span></div></div>
     </div>
+</section>
 
-    <div class="col-md-4">
-        <div class="card p-3 mb-3">
-            <h5>Резка проёмов</h5>
-            <p>Быстро и аккуратно</p>
+<section class="content-card p-4 p-lg-5 mb-4">
+    <h2 class="section-title">Услуги в {{ city.name }} с ценами</h2>
+    <div class="row g-3 mb-4">
+        {% for service_page in city.service_pages.all %}
+        <div class="col-md-6 col-lg-4">
+            <a class="text-decoration-none" href="/{{ city.slug }}/{{ service_page.service.slug }}/{{ service_page.slug }}/">
+                <div class="card h-100 border-0 bg-light-subtle">
+                    <div class="card-body">
+                        <h3 class="h5 mb-2 text-dark">{{ service_page.title }}</h3>
+                        <p class="mb-0 text-secondary">Подробные условия, цены и сроки по услуге.</p>
+                    </div>
+                </div>
+            </a>
         </div>
+        {% empty %}
+        <div class="col-12">
+            <p class="mb-0 text-secondary">Список услуг будет добавлен в ближайшее время.</p>
+        </div>
+        {% endfor %}
     </div>
+    <a href="/{{ city.slug }}/lead/" class="btn btn-primary">Рассчитать стоимость</a>
+</section>
 
-</div>
+<section class="content-card p-4 p-lg-5 mb-4">
+    <h2 class="section-title">Почему выбирают нас в {{ city.name }}</h2>
+    <ul class="mb-4">
+        <li>Опытные мастера и профильное оборудование.</li>
+        <li>Точность работ и аккуратность на объекте.</li>
+        <li>Прозрачная смета и официальная гарантия.</li>
+        <li>Работаем с частными клиентами и бизнесом.</li>
+    </ul>
+    <h3 class="h5">Как мы работаем</h3>
+    <ol class="mb-0">
+        <li>Принимаем заявку и уточняем задачу.</li>
+        <li>Выезжаем на замер и согласуем смету.</li>
+        <li>Выполняем работы и сдаем объект.</li>
+    </ol>
+</section>
 
-<!-- ПРЕИМУЩЕСТВА -->
-<h2>Почему выбирают нас</h2>
-
-<ul class="mb-4">
-    <li>✔ Опыт более 5 лет</li>
-    <li>✔ Работаем без пыли</li>
-    <li>✔ Гарантия качества</li>
-    <li>✔ Выезд в день обращения</li>
-</ul>
-
-<!-- ФОРМА -->
-<div class="card p-4 mb-4">
-    <h3>Оставить заявку</h3>
-
+<section class="content-card p-4 p-lg-5 mb-4">
+    <h2 class="section-title">Получить расчет стоимости</h2>
     <form method="post" action="/{{ city.slug }}/lead/">
         {% csrf_token %}
-
-        <input type="text" name="name" class="form-control mb-2" placeholder="Ваше имя" required>
-        <input type="text" name="phone" class="form-control mb-2" placeholder="Телефон" required>
-
-        <button class="btn btn-success w-100">
-            Отправить заявку
-        </button>
+        <div class="row g-3">
+            <div class="col-md-6">
+                <input type="text" name="name" class="form-control form-control-lg" placeholder="Ваше имя" required>
+            </div>
+            <div class="col-md-6">
+                <input type="text" name="phone" class="form-control form-control-lg" placeholder="Телефон" required>
+            </div>
+            <div class="col-12">
+                <button class="btn btn-success btn-lg w-100">Отправить заявку</button>
+            </div>
+        </div>
     </form>
-</div>
+</section>
 
-<!-- КОНТАКТЫ -->
-<h2>Контакты</h2>
+<section class="content-card p-4 p-lg-5 mb-4">
+    <h2 class="section-title">Частые вопросы</h2>
+    <div class="accordion" id="faqHome">
+        {% for faq_item in city.faqs.all|slice:":6" %}
+        <div class="accordion-item">
+            <h3 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq{{ forloop.counter }}">
+                    {{ faq_item.question }}
+                </button>
+            </h3>
+            <div id="faq{{ forloop.counter }}" class="accordion-collapse collapse" data-bs-parent="#faqHome">
+                <div class="accordion-body">{{ faq_item.answer|truncatechars:260 }}</div>
+            </div>
+        </div>
+        {% empty %}
+        <p class="muted mb-0">FAQ будет заполнен через админ-панель.</p>
+        {% endfor %}
+    </div>
+</section>
 
-<p><b>Телефон:</b> {{ city.phone }}</p>
-<p><b>Адрес:</b> {{ city.address }}</p>
-<p><b>Цены:</b> {{ city.price_text }}</p>
+<section class="content-card p-4 p-lg-5 mb-4">
+    <h2 class="section-title">Отзывы клиентов</h2>
+    <div class="row g-3">
+        <div class="col-md-6"><div class="kpi-card"><strong>Алексей, {{ city.name }}</strong><p class="mb-0 muted">Работы выполнены аккуратно и в срок, смета не изменилась.</p></div></div>
+        <div class="col-md-6"><div class="kpi-card"><strong>Марина, {{ city.name }}</strong><p class="mb-0 muted">Оперативно приехали, проконсультировали и сделали качественно.</p></div></div>
+    </div>
+</section>
+
+<section class="content-card p-4 p-lg-5 mb-4">
+    <h2 class="section-title">Полезная информация</h2>
+    <p class="mb-0">Мы работаем по всему городу {{ city.name }} и ближайшим районам. По каждому объекту подбираем оптимальную технологию и рассчитываем стоимость до начала работ.</p>
+</section>
+
+<section class="content-card p-4 p-lg-5">
+    <h2 class="section-title">Контакты</h2>
+    <p><strong>Телефон:</strong> {{ city.phone|default:"уточняйте у менеджера" }}</p>
+    <p><strong>Адрес:</strong> {{ city.address|default:"работаем по всему городу и области" }}</p>
+    {% if city.price_text %}<p><strong>Цены:</strong> {{ city.price_text }}</p>{% endif %}
+</section>
 
 {% endblock %}

@@ -14,10 +14,10 @@ from pathlib import Path
 
 import os
 from dotenv import load_dotenv
-
+from django.conf import settings
 load_dotenv()
 
-SECRET_KEY = os.getenv("SECRET_KEY")
+SECRET_KEY = os.getenv("SECRET_KEY", "unsafe-secret-key")
 DEBUG = os.getenv("DEBUG") == "True"
 
 
@@ -33,7 +33,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-kb-i2_&q0--uv75n4-&)bbw_-s)0%#q%e6a#$h(v&5msv-@htn'
+SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -52,12 +52,14 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'users',
-    'cities',
+#    'cities',
     'leads',
-    'pages',
+#    'pages',
     'seo',
     'tenants',
     'django.contrib.sitemaps',
+    'cities.apps.CitiesConfig',
+    'pages.apps.PagesConfig',
 ]
 
 AUTH_USER_MODEL = 'users.User'
@@ -89,10 +91,10 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                
-                
-            ],
+                'seo.views.seo_context',
+                'core.context_processors.menu_services',
 
+                ],
         },
     },
 ]
@@ -149,3 +151,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = 'static/'
+
+
+STATICFILES_DIRS = [
+    BASE_DIR / "static",
+]
+
+STATIC_ROOT = BASE_DIR / "staticfiles"

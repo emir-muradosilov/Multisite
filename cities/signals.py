@@ -5,20 +5,27 @@ from pages.models import ServicePage, FAQ
 
 
 @receiver(post_save, sender=City)
-def create_default_pages(sender, instance, created, **kwargs):
-    if created:
-        ServicePage.objects.create(
-            city=instance,
-            title=f'Алмазное бурение в {instance.name}',
-            slug='almaznoe-burenie',
-            content=f'Услуги алмазного бурения в городе {instance.name}',
-            seo_title=f'Алмазное бурение в {instance.name}',
-            seo_description=f'Заказать алмазное бурение в {instance.name}'
-        )
+def create_default_content(sender, instance, created, **kwargs):
+    if not created:
+        return
 
+    # ✅ Создаем только FAQ (без спама страниц)
+    FAQ_TEMPLATES = [
+        {
+            "slug": "almaznoe-burenie",
+            "title": "Алмазное бурение",
+        },
+        {
+            "slug": "almaznaya-rezka",
+            "title": "Алмазная резка",
+        }
+    ]
+
+
+    for template in FAQ_TEMPLATES:
         FAQ.objects.create(
             city=instance,
-            question=f'Сколько стоит алмазное бурение в {instance.name}?',
-            slug='skolko-stoit-almaznoe-burenie',
-            answer=f'Цена алмазного бурения в {instance.name} зависит от диаметра.'
+            question=f"Сколько стоит {template['title'].lower()} в {instance.name}?",
+            slug=f"price-{template['slug']}",
+            answer=f"Стоимость зависит от объема работ в {instance.name}."
         )

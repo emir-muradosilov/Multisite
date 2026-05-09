@@ -2,24 +2,200 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <link rel="canonical" href="{{ canonical_url }}">
-    <title>{% block title %}{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <meta name="description" content="{% block description %}{% endblock %}">
-    <meta name="keywords" content="{% block keywords %}{% endblock %}">
+    <title>
+        {% block title %}
+            {{ page.seo_title|default:page.title|default:"Алмазное бурение" }}
+        {% endblock %}
+    </title>
+
+    <meta name="description" content="{% block description %}{{ page.seo_description|default:"Алмазное бурение и резка в вашем городе" }}{% endblock %}">
+    <meta name="keywords" content="{% block keywords %}{{ page.seo_keywords|default:"алмазное бурение, резка бетона" }}{% endblock %}">
+
+    <!-- 🔥 SEO -->
+    {% if page and page.no_index %}
+        <meta name="robots" content="noindex,nofollow">
+    {% else %}
+        <meta name="robots" content="index,follow">
+    {% endif %}
+
+    {% if canonical_url %}
+        <link rel="canonical" href="{{ canonical_url }}">
+    {% endif %}
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    {% block extra_head %}{% endblock %}
+
+    <style>
+        :root {
+            --brand:#0d6efd;
+            --ink:#20222a;
+            --muted:#6b7280;
+            --line:#e9edf3;
+            --bg:#f8f9fb;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--ink);
+        }
+
+        .topbar {
+            background:#0f172a;
+            color:#dbe4ff;
+            font-size:.9rem;
+        }
+
+        .site-header {
+            background:#fff;
+            border-bottom:1px solid var(--line);
+            position: sticky;
+            top: 0;
+            z-index: 30;
+        }
+
+        .nav-link {
+            color: #20222a;
+            text-decoration: none;
+            font-weight: 400;
+            padding: 5px 8px;
+        }
+
+        .nav-link:hover {
+            color: var(--brand);
+        }
+
+        .dropdown {
+            position: relative;
+        }
+
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            min-width: 220px;
+            background: #fff;
+            border: 1px solid var(--line);
+            border-radius: 8px;
+            padding: 6px 0;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        }
+
+        .dropdown:hover .dropdown-menu {
+            display: block;
+        }
+
+        .dropdown-item {
+            padding: 8px 14px;
+            color: #20222a;
+            font-size: 14px;
+        }
+
+        .dropdown-item:hover {
+            background: #f5f7fb;
+            color: var(--brand);
+        }
+
+        .content-card {
+            background:#fff;
+            border:1px solid var(--line);
+            border-radius:1rem;
+            box-shadow:0 4px 18px rgba(15, 23, 42, .04);
+        }
+
+        .site-footer {
+            border-top:1px solid var(--line);
+            background:#fff;
+        }
+    </style>
+
     
+{% if canonical_url %}
+<link rel="canonical" href="{{ canonical_url }}">
+{% endif %}
+
+{% block extra_head %}{% endblock %}
 </head>
+
 <body>
-<nav class="navbar navbar-light bg-light">
-    <div class="container">
-        <a class="navbar-brand" href="/">Multisite</a>
+
+<div class="topbar py-2">
+    <div class="container d-flex justify-content-between">
+        <span>Работаем по договору. Гарантия на услуги.</span>
+        <span>
+            {% if city and city.phone %}
+                {{ city.phone }}
+            {% else %}
+                Бесплатная консультация
+            {% endif %}
+        </span>
     </div>
-</nav>
-<div class="container mt-4">
-    {% block content %}{% endblock %}
 </div>
+
+<header class="site-header">
+    <nav class="navbar">
+        <div class="container py-2 d-flex align-items-center">
+
+            <a class="navbar-brand fw-bold" href="/">
+                Алмазное бурение и канатная резка
+            </a>
+
+            <div class="ms-auto d-flex align-items-center gap-3">
+
+                {% if menu_services %}
+                    {% for service in menu_services %}
+
+                        <div class="dropdown">
+
+                            <!-- ✅ КЛИКАБЕЛЬНАЯ СТРАНИЦА -->
+                            <a class="nav-link"
+                               href="/{{ menu_city.slug }}/{{ service.slug }}/">
+                                {{ service.title }}
+                            </a>
+
+                            {% if service.children.exists %}
+                            <div class="dropdown-menu">
+
+                                {% for child in service.children.all %}
+                                    {% if child.is_published and child.show_in_menu %}
+                                        <a class="dropdown-item"
+                                           href="/{{ menu_city.slug }}/{{ service.slug }}/{{ child.slug }}/">
+                                            {{ child.title }}
+                                        </a>
+                                    {% endif %}
+                                {% endfor %}
+
+                            </div>
+                            {% endif %}
+
+                        </div>
+
+                    {% endfor %}
+                {% endif %}
+
+                {% if menu_city %}
+                    <a href="/{{ menu_city.slug }}/lead/" class="btn btn-primary btn-sm">
+                        Оставить заявку
+                    </a>
+                {% endif %}
+
+            </div>
+
+        </div>
+    </nav>
+</header>
+
+<main class="container my-4 my-lg-5">
+    {% block content %}{% endblock %}
+</main>
+
+<footer class="site-footer py-4 mt-5">
+    <div class="container d-flex justify-content-between">
+        <small class="text-muted">© {% now "Y" %} Услуги по всей России</small>
+        <small class="text-muted">Алмазное бурение и резка</small>
+    </div>
+</footer>
 
 </body>
 </html>

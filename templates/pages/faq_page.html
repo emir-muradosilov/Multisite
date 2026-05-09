@@ -17,19 +17,25 @@
 }
 </script>
 {% endblock %}
-{% block title %}
-{{ faq.seo_title }}
-{% endblock %}
-
-{% block description %}
-{{ faq.seo_description }}
-{% endblock %}
+{% block title %}{{ faq.seo_title|default:faq.question }}{% endblock %}
+{% block description %}{{ faq.seo_description|default:"Ответы на частые вопросы по услугам алмазного бурения и резки." }}{% endblock %}
+{% block keywords %}{{ faq.seo_keywords|default:"вопросы и ответы, услуги, "|add:city.name }}{% endblock %}
 
 {% block content %}
+<section class="content-card p-4 p-lg-5 mb-4">
+    <nav aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb mb-0">
+            <li class="breadcrumb-item"><a href="/{{ city.slug }}/">Главная</a></li>
+            <li class="breadcrumb-item active" aria-current="page">FAQ</li>
+        </ol>
+    </nav>
+    <h1 class="h3 mb-3">{{ faq.h1_title|default:faq.question }}</h1>
+    <p class="mb-0">{{ faq.answer }}</p>
+</section>
 
-
-
-<h1>{{ faq.question }}</h1>
-
-<p>{{ faq.answer }}</p>
+<section class="content-card p-4 p-lg-5">
+    <h2 class="section-title">Нужна консультация?</h2>
+    <p class="mb-3">Оставьте заявку, и мы подберем решение под ваш объект в {{ city.name }}.</p>
+    <a href="/{{ city.slug }}/lead/" class="btn btn-primary">Получить консультацию</a>
+</section>
 {% endblock %}

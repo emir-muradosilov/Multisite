@@ -1,21 +1,13 @@
 {% extends 'base.html' %}
 
-{% block title %}
-{{ city.seo_title }}
-{% endblock %}
-
-{% block description %}
-{{ city.seo_description }}
-{% endblock %}
-
-{% block keywords %}
-{{ city.seo_keywords }}
-{% endblock %}
+{% block title %}Заявка отправлена{% endblock %}
+{% block description %}Спасибо, заявка успешно отправлена. Мы скоро свяжемся с вами.{% endblock %}
+{% block keywords %}заявка отправлена, подтверждение{% endblock %}
 
 {% block content %}
-
-<h1>Заявка отправлена</h1>
-<p>Мы скоро с вами свяжемся.</p>
-
-
+<section class="content-card p-4 p-lg-5 mx-auto text-center" style="max-width: 760px;">
+    <h1 class="h3 mb-3">Заявка отправлена</h1>
+    <p class="mb-4">Спасибо! Мы скоро с вами свяжемся и уточним детали.</p>
+    <a href="/" class="btn btn-primary">На главную</a>
+</section>
 {% endblock %}

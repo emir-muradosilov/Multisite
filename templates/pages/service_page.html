@@ -1,56 +1,199 @@
 {% extends 'base.html' %}
 
+{% block title %}{{ page.seo_title|default:page.title }}{% endblock %}
+{% block description %}{{ page.seo_description|default:"Профессиональные услуги в вашем городе." }}{% endblock %}
+{% block keywords %}{{ page.seo_keywords|default:"алмазное бурение, резка бетона" }}{% endblock %}
+
+{% block extra_head %}
+{% if page.no_index %}
+<meta name="robots" content="noindex, nofollow">
+{% endif %}
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Service",
+  "name": "{{ page.title|escapejs }}",
+  "areaServed": "{{ city.name|escapejs }}",
+  "description": "{{ page.seo_description|default:page.title|escapejs }}"
+}
+</script>
+{% endblock %}
+
+
 {% block content %}
 
-<!-- TITLE -->
-<h1 class="mb-3">
-    {{ page.title }} в {{ city.name }}
-</h1>
+<!-- Хлебные крошки -->
+<nav aria-label="breadcrumb" class="mb-3">
+    <ol class="breadcrumb mb-0">
+        <li class="breadcrumb-item">
+            <a href="/{{ city.slug }}/">Главная</a>
+        </li>
 
-<p class="lead">
-    Профессиональные услуги в {{ city.name }}. Работаем быстро и аккуратно.
-</p>
+        {% if parent %}
+        <li class="breadcrumb-item">
+            <a href="/{{ city.slug }}/{{ parent.slug }}/">
+                {{ parent.title }}
+            </a>
+        </li>
+        {% endif %}
 
-<!-- CTA -->
-<a href="/{{ city.slug }}/lead/" class="btn btn-primary mb-4">
-    Оставить заявку
-</a>
+        {% if page != parent %}
+        <li class="breadcrumb-item active">
+            {{ page.title }}
+        </li>
+        {% endif %}
+    </ol>
+</nav>
 
-<!-- ОПИСАНИЕ -->
-<div class="mb-4">
-    {{ page.content|safe }}
-</div>
 
-<!-- ПРЕИМУЩЕСТВА -->
-<h2>Наши преимущества</h2>
+<!-- HERO -->
+<section class="content-card p-4 mb-4">
+    <h1 class="display-6 fw-bold mb-3">
+        {{ page.h1_title|default:page.title }}
+    </h1>
 
-<ul class="mb-4">
-    <li>✔ Опыт более 5 лет</li>
-    <li>✔ Работаем без пыли</li>
-    <li>✔ Быстрый выезд</li>
-    <li>✔ Гарантия качества</li>
-</ul>
+    <p class="lead mb-4">
+        Профессиональные услуги в {{ city.name }}.
+        Работаем быстро, аккуратно и с гарантией результата.
+    </p>
 
-<!-- ФОРМА -->
-<div class="card p-4 mb-4">
-    <h3>Оставить заявку</h3>
+    <a href="/{{ city.slug }}/lead/" class="btn btn-primary btn-sm">
+        Оставить заявку
+    </a>
+</section>
 
-    <form method="post" action="/{{ city.slug }}/lead/">
-        {% csrf_token %}
 
-        <input type="text" name="name" class="form-control mb-2" placeholder="Ваше имя" required>
-        <input type="text" name="phone" class="form-control mb-2" placeholder="Телефон" required>
+<!-- ПОДУСЛУГИ -->
+{% if children %}
+<section class="content-card p-4 mb-4">
+    <h2 class="section-title">
+        Подуслуги {{ page.title|lower }} в {{ city.name }}
+    </h2>
 
-        <button class="btn btn-success w-100">
-            Отправить заявку
-        </button>
-    </form>
-</div>
+    <div class="row g-3">
+        {% for child in children %}
+        <div class="col-md-4">
+            <a href="/{{ city.slug }}/{{ parent.slug }}/{{ child.slug }}/"
+               class="text-decoration-none">
 
-<!-- КОНТАКТЫ -->
-<h3>Контакты</h3>
+                <div class="kpi-card h-100">
+                    <strong>{{ child.title }}</strong>
+                </div>
 
-<p><b>Телефон:</b> {{ city.phone }}</p>
-<p><b>Адрес:</b> {{ city.address }}</p>
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+{% endif %}
+
+
+<section class="mb-4">
+    <div class="row g-3">
+        <div class="col-md-3"><div class="content-card p-4 mb-4"><strong>от 5 лет</strong><br><span class="muted">опыт специалистов</span></div></div>
+        <div class="col-md-3"><div class="content-card p-4 mb-4"><strong>24/7</strong><br><span class="muted">прием заявок</span></div></div>
+        <div class="col-md-3"><div class="content-card p-4 mb-4"><strong>до 12 мес.</strong><br><span class="muted">гарантия на работы</span></div></div>
+        <div class="col-md-3"><div class="content-card p-4 mb-4"><strong>1 день</strong><br><span class="muted">выезд на объект</span></div></div>
+    </div>
+</section>
+
+
+<!-- ЛОКАЛЬНЫЙ SEO БЛОК -->
+{% if city_data %}
+<section class="content-card p-4 mb-4">
+    <h2 class="section-title">
+        Особенности работ в {{ city.name }}
+    </h2>
+
+    <p>
+        Работы часто выполняются в районах: {{ city_data.districts }}.
+    </p>
+
+    <p>
+        Основные объекты: {{ city_data.industrial_zones }}.
+    </p>
+
+    <p>
+        Используется бетон: {{ city_data.typical_concrete }},
+        толщина: {{ city_data.typical_thickness }}.
+    </p>
+
+    <p>
+        Средняя стоимость: {{ city_data.price_range|default:"Цена рассчитывается индивидуально" }}.
+    </p>
+
+    {% if city_data.restrictions %}
+    <p>
+        Ограничения: {{ city_data.restrictions }}
+    </p>
+    {% endif %}
+</section>
+{% endif %}
+
+
+<!-- ПОРТФОЛИО -->
+{% if city_data and city_data.portfolio %}
+<section class="content-card p-4 mb-4">
+    <h2 class="section-title">Наши работы в {{ city.name }}</h2>
+
+    <ul>
+        {% for item in city_data.portfolio.splitlines %}
+            <li>{{ item }}</li>
+        {% endfor %}
+    </ul>
+</section>
+{% endif %}
+
+
+<!-- КОНТЕНТ -->
+<section class="content-card p-4 mb-4">
+    <h2 class="section-title">Описание услуги</h2>
+    <div>{{ page.content|safe|linebreaks }}</div>
+</section>
+
+
+<!-- ЦЕНЫ -->
+<section class="content-card p-4 mb-4">
+    <h2 class="section-title">
+        Цены на {{ page.title|lower }} в {{ city.name }}
+    </h2>
+
+    <p>{{ city_data.price_range|default:"Цена рассчитывается индивидуально" }}</p>
+</section>
+
+
+<!-- FAQ -->
+{% if faqs %}
+<section class="content-card p-4 mb-4">
+    <h2 class="section-title">Частые вопросы</h2>
+
+    <div class="list-group">
+        {% for faq_item in faqs %}
+        <a class="list-group-item list-group-item-action"
+           href="/{{ city.slug }}/faq/{{ faq_item.slug }}/">
+            {{ faq_item.question }}
+        </a>
+        {% endfor %}
+    </div>
+</section>
+{% endif %}
+
+
+<!-- ПЕРЕЛИНКОВКА ГОРОДОВ -->
+<section class="content-card p-4 mb-4">
+    <h2 class="section-title">Работаем в других городах</h2>
+
+    <div class="d-flex flex-wrap gap-2">
+        {% for c in other_cities %}
+            {% if c != city %}
+                <a href="/{{ c.slug }}/{{ parent.slug }}/"
+                   class="btn btn-outline-secondary btn-sm">
+                    {{ parent.title }} в {{ c.name }}
+                </a>
+            {% endif %}
+        {% endfor %}
+    </div>
+</section>
 
 {% endblock %}

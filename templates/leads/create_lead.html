@@ -1,27 +1,17 @@
 {% extends 'base.html' %}
 
-{% block title %}
-{{ city.seo_title }}
-{% endblock %}
-
-{% block description %}
-{{ city.seo_description }}
-{% endblock %}
-
-{% block keywords %}
-{{ city.seo_keywords }}
-{% endblock %}
+{% block title %}Оставить заявку в {{ city.name }}{% endblock %}
+{% block description %}Оставьте заявку на услуги в {{ city.name }}. Менеджер свяжется с вами в ближайшее время.{% endblock %}
+{% block keywords %}заявка, услуги, {{ city.name }}{% endblock %}
 
 {% block content %}
-
-<h1>Оставить заявку - {{ city.name }}</h1>
-
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Отправить</button>
-</form>
-
-
-
+<section class="content-card p-4 p-lg-5 mx-auto" style="max-width: 760px;">
+    <h1 class="h3 mb-3">Оставить заявку - {{ city.name }}</h1>
+    <p class="text-secondary mb-4">Заполните форму, и мы свяжемся с вами для уточнения деталей.</p>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-success btn-lg">Отправить</button>
+    </form>
+</section>
 {% endblock %}
