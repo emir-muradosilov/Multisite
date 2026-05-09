@@ -1,12 +1,23 @@
+
 {% extends 'base.html' %}
 
-{% block title %}{{ page.seo_title|default:page.title }}{% endblock %}
-{% block description %}{{ page.seo_description|default:"Профессиональные услуги в вашем городе." }}{% endblock %}
-{% block keywords %}{{ page.seo_keywords|default:"алмазное бурение, резка бетона" }}{% endblock %}
+{% block title %}
+{{ page.seo_title|default:page.title }}
+{% endblock %}
+
+{% block description %}
+{{ page.seo_description|default:"Профессиональные услуги в вашем городе." }}
+{% endblock %}
+
+{% block keywords %}
+{{ page.seo_keywords|default:"алмазное бурение, резка бетона" }}
+{% endblock %}
+
 
 {% block extra_head %}
+
 {% if page.no_index %}
-<meta name="robots" content="noindex, nofollow">
+<meta name="robots" content="noindex,nofollow">
 {% endif %}
 
 <script type="application/ld+json">
@@ -18,182 +29,176 @@
   "description": "{{ page.seo_description|default:page.title|escapejs }}"
 }
 </script>
+
 {% endblock %}
 
 
 {% block content %}
 
+
 <!-- Хлебные крошки -->
-<nav aria-label="breadcrumb" class="mb-3">
-    <ol class="breadcrumb mb-0">
-        <li class="breadcrumb-item">
-            <a href="/{{ city.slug }}/">Главная</a>
-        </li>
+    {% include 'components/bread_crumbs.html' %}
 
-        {% if parent %}
-        <li class="breadcrumb-item">
-            <a href="/{{ city.slug }}/{{ parent.slug }}/">
-                {{ parent.title }}
-            </a>
-        </li>
-        {% endif %}
+<!-- Главный баннер -->
+    {% include 'components/hero.html' %}
 
-        {% if page != parent %}
-        <li class="breadcrumb-item active">
-            {{ page.title }}
-        </li>
-        {% endif %}
-    </ol>
-</nav>
-
-
-<!-- HERO -->
-<section class="content-card p-4 mb-4">
-    <h1 class="display-6 fw-bold mb-3">
-        {{ page.h1_title|default:page.title }}
-    </h1>
-
-    <p class="lead mb-4">
-        Профессиональные услуги в {{ city.name }}.
-        Работаем быстро, аккуратно и с гарантией результата.
-    </p>
-
-    <a href="/{{ city.slug }}/lead/" class="btn btn-primary btn-sm">
-        Оставить заявку
-    </a>
-</section>
+<!-- KPI. 4 блока под главным банером -->
+    {% include 'components/kpi.html' %}
 
 
 <!-- ПОДУСЛУГИ -->
 {% if children %}
-<section class="content-card p-4 mb-4">
-    <h2 class="section-title">
-        Подуслуги {{ page.title|lower }} в {{ city.name }}
+<section class="content-card p-4 p-lg-5 mb-4">
+
+    <h2 class="section-title mb-4">
+        Подуслуги
     </h2>
 
     <div class="row g-3">
+
         {% for child in children %}
-        <div class="col-md-4">
+        <div class="col-md-6 col-lg-4">
+
             <a href="/{{ city.slug }}/{{ parent.slug }}/{{ child.slug }}/"
                class="text-decoration-none">
 
-                <div class="kpi-card h-100">
-                    <strong>{{ child.title }}</strong>
+                <div class="border rounded-4 p-4 h-100 bg-light">
+
+                    <h3 class="h5 text-dark mb-2">
+                        {{ child.title }}
+                    </h3>
+
+                    <p class="text-secondary mb-0">
+                        Подробная информация, цены и сроки выполнения.
+                    </p>
+
                 </div>
 
             </a>
+
         </div>
         {% endfor %}
+
     </div>
+
 </section>
 {% endif %}
 
 
-<section class="mb-4">
-    <div class="row g-3">
-        <div class="col-md-3"><div class="content-card p-4 mb-4"><strong>от 5 лет</strong><br><span class="muted">опыт специалистов</span></div></div>
-        <div class="col-md-3"><div class="content-card p-4 mb-4"><strong>24/7</strong><br><span class="muted">прием заявок</span></div></div>
-        <div class="col-md-3"><div class="content-card p-4 mb-4"><strong>до 12 мес.</strong><br><span class="muted">гарантия на работы</span></div></div>
-        <div class="col-md-3"><div class="content-card p-4 mb-4"><strong>1 день</strong><br><span class="muted">выезд на объект</span></div></div>
-    </div>
-</section>
-
-
-<!-- ЛОКАЛЬНЫЙ SEO БЛОК -->
+<!-- SEO BLOCK -->
 {% if city_data %}
-<section class="content-card p-4 mb-4">
-    <h2 class="section-title">
+<section class="content-card p-4 p-lg-5 mb-4">
+
+    <h2 class="section-title mb-4">
         Особенности работ в {{ city.name }}
     </h2>
 
-    <p>
-        Работы часто выполняются в районах: {{ city_data.districts }}.
-    </p>
+    <div class="row g-4">
 
-    <p>
-        Основные объекты: {{ city_data.industrial_zones }}.
-    </p>
+        <div class="col-md-6">
 
-    <p>
-        Используется бетон: {{ city_data.typical_concrete }},
-        толщина: {{ city_data.typical_thickness }}.
-    </p>
+            <p>
+                <strong>Районы работ:</strong><br>
+                {{ city_data.districts }}
+            </p>
 
-    <p>
-        Средняя стоимость: {{ city_data.price_range|default:"Цена рассчитывается индивидуально" }}.
-    </p>
+            <p>
+                <strong>Основные объекты:</strong><br>
+                {{ city_data.industrial_zones }}
+            </p>
 
-    {% if city_data.restrictions %}
-    <p>
-        Ограничения: {{ city_data.restrictions }}
-    </p>
-    {% endif %}
+        </div>
+
+        <div class="col-md-6">
+
+            <p>
+                <strong>Тип бетона:</strong><br>
+                {{ city_data.typical_concrete }}
+            </p>
+
+            <p>
+                <strong>Толщина:</strong><br>
+                {{ city_data.typical_thickness }}
+            </p>
+
+        </div>
+
+    </div>
+
 </section>
 {% endif %}
 
 
-<!-- ПОРТФОЛИО -->
-{% if city_data and city_data.portfolio %}
-<section class="content-card p-4 mb-4">
-    <h2 class="section-title">Наши работы в {{ city.name }}</h2>
 
-    <ul>
-        {% for item in city_data.portfolio.splitlines %}
-            <li>{{ item }}</li>
-        {% endfor %}
-    </ul>
-</section>
-{% endif %}
+<!-- CONTENT -->
+<section class="content-card p-4 p-lg-5 mb-4">
 
-
-<!-- КОНТЕНТ -->
-<section class="content-card p-4 mb-4">
-    <h2 class="section-title">Описание услуги</h2>
-    <div>{{ page.content|safe|linebreaks }}</div>
-</section>
-
-
-<!-- ЦЕНЫ -->
-<section class="content-card p-4 mb-4">
-    <h2 class="section-title">
-        Цены на {{ page.title|lower }} в {{ city.name }}
+    <h2 class="section-title mb-4">
+        Описание услуги
     </h2>
 
-    <p>{{ city_data.price_range|default:"Цена рассчитывается индивидуально" }}</p>
+    <div class="content-text">
+        {{ page.content|safe|linebreaks }}
+    </div>
+
 </section>
+
+
+
+<!-- PRICE -->
+<section class="content-card p-4 p-lg-5 mb-4">
+
+    <h2 class="section-title mb-4">
+        Стоимость работ
+    </h2>
+
+    <div class="alert alert-light border mb-0">
+
+        {{ city_data.price_range|default:"Цена рассчитывается индивидуально" }}
+
+    </div>
+
+</section>
+
 
 
 <!-- FAQ -->
 {% if faqs %}
-<section class="content-card p-4 mb-4">
-    <h2 class="section-title">Частые вопросы</h2>
-
-    <div class="list-group">
-        {% for faq_item in faqs %}
-        <a class="list-group-item list-group-item-action"
-           href="/{{ city.slug }}/faq/{{ faq_item.slug }}/">
-            {{ faq_item.question }}
-        </a>
-        {% endfor %}
-    </div>
-</section>
+    {% include 'components/faq.html' %}
 {% endif %}
 
 
-<!-- ПЕРЕЛИНКОВКА ГОРОДОВ -->
-<section class="content-card p-4 mb-4">
-    <h2 class="section-title">Работаем в других городах</h2>
+
+<!-- CTA -->
+    {% include 'components/cta.html' %}
+
+
+<!-- ПЕРЕЛИНКОВКА -->
+<section class="content-card p-4 p-lg-5">
+
+    <h2 class="section-title mb-4">
+        Работаем в других городах
+    </h2>
 
     <div class="d-flex flex-wrap gap-2">
+
         {% for c in other_cities %}
+
             {% if c != city %}
+
                 <a href="/{{ c.slug }}/{{ parent.slug }}/"
                    class="btn btn-outline-secondary btn-sm">
+
                     {{ parent.title }} в {{ c.name }}
+
                 </a>
+
             {% endif %}
+
         {% endfor %}
+
     </div>
+
 </section>
 
 {% endblock %}
