@@ -1,0 +1,15 @@
+.service-content p {
+    margin-bottom: 1rem;
+}
+
+.service-content ul {
+    padding-left: 1.2rem;
+}
+
+.service-content li {
+    margin-bottom: .5rem;
+}
+
+.accordion-button {
+    font-weight: 600;
+}

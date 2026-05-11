@@ -19,12 +19,17 @@ from django.urls import path
 from django.urls import include
 from django.contrib.sitemaps.views import sitemap
 from cities.sitemaps import CitySitemap
-from pages.sitemaps import ServicePageSitemap
 from .views import robots_txt
+from pages.sitemaps import (
+    CitySitemap,
+    ServicePageSitemap,
+    FAQSitemap,
+)
 
 sitemaps = {
     'cities': CitySitemap,
     'pages': ServicePageSitemap,
+    'faq': FAQSitemap,
 }
 
 urlpatterns = [
@@ -34,12 +39,7 @@ urlpatterns = [
     path('', include('leads.urls')),
     path('', include('cities.urls')),
     path('', include('pages.urls')),
-    path(
-    'sitemap.xml',
-    sitemap,
-    {'sitemaps': sitemaps},
-    name='django.contrib.sitemaps.views.sitemap'
-),
+    path('sitemap.xml', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
     path('robots.txt', robots_txt, name='robots_txt'),
     
     

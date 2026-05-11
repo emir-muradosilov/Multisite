@@ -4,6 +4,9 @@
 
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    <link rel="stylesheet" href="{% static 'css/layout.css' %}">
+    <link rel="stylesheet" href="{% static 'css/components.css' %}">
+    <link rel="stylesheet" href="{% static 'css/pages.css' %}">
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -32,11 +35,33 @@
 
 
 
-    
-{% if canonical_url %}
-<link rel="canonical" href="{{ canonical_url }}">
-{% endif %}
+<!-- Open Graph -->
+<meta property="og:type" content="website">
 
+<meta property="og:title"
+      content="{% block og_title %}{{ page.seo_title|default:page.title|default:'Алмазное бурение' }}{% endblock %}">
+
+<meta property="og:description"
+      content="{% block og_description %}{{ page.seo_description|default:'Профессиональные услуги алмазного бурения и резки.' }}{% endblock %}">
+
+<meta property="og:url"
+      content="{{ request.build_absolute_uri }}">
+
+<meta property="og:site_name"
+      content="Алмазное бурение">
+
+<meta property="og:locale"
+      content="ru_RU">
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title"
+      content="{% block twitter_title %}{{ page.seo_title|default:page.title }}{% endblock %}">
+<meta name="twitter:description"
+      content="{% block twitter_description %}{{ page.seo_description }}{% endblock %}">
+
+
+    
 {% block extra_head %}{% endblock %}
 </head>
 
@@ -118,6 +143,16 @@
         <small class="text-muted">Алмазное бурение и резка</small>
     </div>
 </footer>
+
+
+<!-- MOBILE CTA -->
+<div class="mobile-cta d-lg-none">
+    <a href="/{{ city.slug }}/lead/" class="btn btn-primary w-100">
+        Оставить заявку
+    </a>
+</div>
+
+
 
 </body>
 </html>

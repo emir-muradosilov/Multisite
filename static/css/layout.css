@@ -1,0 +1,49 @@
+.topbar {
+    background: #0f172a;
+    color: #dbe4ff;
+    font-size: .9rem;
+}
+
+.site-header {
+    background: #fff;
+    border-bottom: 1px solid var(--line);
+
+    position: sticky;
+    top: 0;
+
+    z-index: 100;
+}
+
+.site-footer {
+    background: #fff;
+    border-top: 1px solid var(--line);
+}
+
+.content-card {
+    background: var(--card);
+
+    border-radius: var(--radius);
+
+    border: 1px solid var(--line);
+
+    box-shadow: var(--shadow);
+}
+
+.hero-section {
+    padding: 70px 0;
+}
+
+.hero-title {
+    font-size: 3rem;
+    font-weight: 800;
+    line-height: 1.1;
+}
+
+.hero-subtitle {
+    font-size: 1.2rem;
+    color: var(--muted);
+}
+
+.section-spacing {
+    margin-bottom: 2rem;
+}
