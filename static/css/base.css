@@ -270,3 +270,210 @@ img {
     }
 
 }
+
+.phone {
+  text-decoration: none; /* убрать подчеркивание */
+  color: inherit;        /* цвет как у окружающего текста */
+}
+
+
+
+
+
+#test
+
+{
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: #f4f7fc;
+      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', 'Noto Sans', sans-serif;
+      line-height: 1.5;
+      color: #1a2c3e;
+      padding: 2rem 1rem;
+    }
+
+
+
+    /* акцентная полоса сверху */
+    .hero-accent {
+      height: 6px;
+      color: black;
+      background: linear-gradient(90deg, #2b7a62, #48b28a, #2b7a62);
+    }
+
+    .content {
+      padding: 2.5rem 2rem;
+    }
+
+    @media (max-width: 680px) {
+      .content {
+        padding: 1.8rem 1.2rem;
+      }
+    }
+
+    /* типографика */
+    h1 {
+      font-size: 1.9rem;
+      font-weight: 800;
+      line-height: 1.25;
+      letter-spacing: -0.01em;
+      background: linear-gradient(135deg, #1f5e4c, #0f3b2f);
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+      margin-bottom: 1.5rem;
+      /*
+      border-left: 5px solid #2b7a62;
+      */
+      padding-left: 1.2rem;
+    }
+
+    h2 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin: 2rem 0 1rem 0;
+      color: #1e4a3b;
+      border-bottom: 2px solid #e2edf2;
+      padding-bottom: 0.5rem;
+    }
+
+    h3 {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin: 1.5rem 0 0.75rem 0;
+      color: #2c5a4a;
+    }
+
+    .lead {
+      font-size: 1.1rem;
+      color: #ffffff;
+      background: #000000;
+      padding: 1rem 1.4rem;
+      border-radius: 1.5rem;
+      margin: 1.2rem 0 1rem 0;
+      /*
+      border-left: 3px solid #48b28a;
+      */
+    }
+
+    p {
+      margin-bottom: 1.2rem;
+      color: #2c3f4f;
+    }
+
+    .highlight-list {
+      margin: 1.2rem 0 1.8rem 0;
+      list-style: none;
+      background: #fefcf5;
+      border-radius: 1.25rem;
+      padding: 0.5rem 0;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+    }
+
+    .highlight-list li {
+      padding: 0.85rem 1.2rem;
+      /*
+      border-left: 4px solid #2b7a62;
+      */
+      margin-bottom: 0.2rem;
+      background: #ffffff;
+      border-radius: 0 1rem 1rem 0;
+      transition: 0.1s ease;
+    }
+
+    .highlight-list li strong {
+      color: #1f5e4c;
+      font-weight: 700;
+      display: inline-block;
+      min-width: 200px;
+    }
+
+    @media (max-width: 550px) {
+      .highlight-list li strong {
+        display: block;
+        margin-bottom: 0.3rem;
+      }
+    }
+
+    .app-list {
+      margin: 1rem 0 1.5rem 0;
+      padding-left: 1.5rem;
+    }
+
+    .app-list li {
+      margin-bottom: 0.65rem;
+      padding-left: 0.5rem;
+    }
+
+    .app-list li::marker {
+      color: #2b7a62;
+      font-weight: bold;
+    }
+
+    .info-card {
+      background: #eef3f0;
+      border-radius: 1.5rem;
+      padding: 1.6rem 1.8rem;
+      margin: 2rem 0 0.5rem 0;
+      border: 1px solid #d4e2dc;
+    }
+
+    .info-card p:last-child {
+      margin-bottom: 0;
+    }
+
+    .btn-ghost {
+      display: inline-block;
+      margin-top: 0.5rem;
+      font-weight: 600;
+      color: #2b7a62;
+      text-decoration: none;
+      border-bottom: 2px solid #b9d9cf;
+      transition: 0.2s;
+    }
+
+    .btn-ghost:hover {
+      color: #1d5b48;
+      border-bottom-color: #2b7a62;
+    }
+
+    footer {
+      background: #f9fbfc;
+      padding: 1.2rem 2rem;
+      border-top: 1px solid #e2edf2;
+      font-size: 0.85rem;
+      color: #5a7687;
+      text-align: center;
+    }
+
+    a {
+      text-decoration: none;
+    }
+
+    hr {
+      margin: 1rem 0;
+      border: none;
+      height: 1px;
+      background: linear-gradient(90deg, #cbdde5, transparent);
+    }
+
+
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: #f0f4f8;
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+  line-height: 1.5;
+  color: #1a2c3e;
+  padding: 2rem 1rem;
+}
+
+

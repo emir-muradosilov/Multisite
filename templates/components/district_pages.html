@@ -1,0 +1,22 @@
+<section class="content-card p-4 p-lg-5 mb-4">
+
+    <h2 class="section-title mb-4">
+        Работаем по всем районам {{ city.in_oblast }}
+    </h2>
+
+    <div class="d-flex flex-wrap gap-2">
+
+        {% for district_page in district_pages %}
+
+            <a href="{{ district_page.get_absolute_url }}"
+               class="btn btn-outline-secondary btn-sm">
+
+                {{ district_page.district.name }}
+
+            </a>
+
+        {% endfor %}
+
+    </div>
+
+</section>

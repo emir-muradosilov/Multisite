@@ -1,0 +1,38 @@
+<section class="content-card p-4 p-lg-5 mb-4">
+
+    <h2 class="section-title mb-4">
+
+        Другие услуги
+
+    </h2>
+
+    <div class="row g-3">
+
+        {% for item in related_services %}
+
+        <div class="col-md-6 col-lg-4">
+
+            <a href="{{ item.get_absolute_url }}"
+               class="text-decoration-none">
+
+                <div class="service-card">
+
+                    <h3 class="h5 text-dark mb-2">
+                        {{ item.title }}
+                    </h3>
+
+                    <p class="text-secondary mb-0">
+                        Подробнее об услуге
+                    </p>
+
+                </div>
+
+            </a>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</section>

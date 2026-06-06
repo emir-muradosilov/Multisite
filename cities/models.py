@@ -5,7 +5,11 @@ from slugify import slugify
 class City(models.Model):
 
     name = models.CharField(max_length=100, unique=True)
-    slug = models.SlugField(unique=True, blank=True)
+    name_where = models.CharField(max_length=100, unique=True)
+    name_oblast = models.CharField(max_length=100, unique=True)
+    name_oblast_where = models.CharField(max_length=100, unique=True)
+
+    slug = models.SlugField(max_length=200, unique=True, blank=True)
 #    subdomain = models.CharField(max_length=100, unique=True)
 
     is_active = models.BooleanField(default=True)
@@ -28,6 +32,8 @@ class City(models.Model):
 
     telegram_chat_id = models.CharField(max_length=50, blank=True, null=True)
 
+    page_score = models.IntegerField(default=0)
+
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = slugify(self.name)
@@ -35,4 +41,18 @@ class City(models.Model):
 
     def __str__(self):
         return self.name
+    
+    @property
+    def in_city(self):
+        return self.name_where
+
+
+    @property
+    def oblast(self):
+        return self.name_oblast
+
+
+    @property
+    def in_oblast(self):
+        return self.name_oblast_where
 

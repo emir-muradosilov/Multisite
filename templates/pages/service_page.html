@@ -1,5 +1,7 @@
-
 {% extends 'base.html' %}
+
+
+
 
 {% block title %}
 {{ page.seo_title|default:page.title }}
@@ -16,8 +18,9 @@
 
 {% block extra_head %}
 
-{% if page.no_index %}
-<meta name="robots" content="noindex,nofollow">
+
+{% if page.no_index or not page_should_index %}
+<meta name="robots" content="noindex,follow">
 {% endif %}
 
 <script type="application/ld+json">
@@ -30,6 +33,78 @@
 }
 </script>
 
+
+{% if reviews %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Service",
+
+  "name": "{{ page.title|escapejs }}",
+
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "ratingValue": "5",
+    "reviewCount": "{{ reviews|length }}"
+  },
+
+  "review": [
+
+    {% for review in reviews %}
+    {
+      "@type": "Review",
+
+      "author": {
+        "@type": "Person",
+        "name": "{{ review.author|escapejs }}"
+      },
+
+      "reviewRating": {
+        "@type": "Rating",
+        "ratingValue": "{{ review.rating }}"
+      },
+
+      "reviewBody": "{{ review.text|striptags|escapejs }}"
+    }{% if not forloop.last %},{% endif %}
+
+    {% endfor %}
+  ]
+}
+</script>
+{% endif %}
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "LocalBusiness",
+  "name": "{{ contacts.company_name|default:city.name|escapejs }}",
+  "image": "",
+  "telephone": "{{ contacts.phone|escapejs }}",
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "{{ city.name|escapejs }}",
+    "streetAddress": "{{ contacts.address|escapejs }}"
+  },
+  "areaServed": "{{ city.name|escapejs }}",
+  "openingHours": "{{ contacts.working_hours|escapejs }}",
+  "priceRange": "{{ city.price_text|default:'₽₽'|escapejs }}"
+}
+</script>
+
+
+
+
+<link rel="canonical" href="{{ canonical_url }}">
+
+{% if not page_should_index %}
+<meta name="robots" content="noindex,follow">
+{% endif %}
+
+
+
+
+
 {% endblock %}
 
 
@@ -40,7 +115,9 @@
     {% include 'components/bread_crumbs.html' %}
 
 <!-- Главный баннер -->
+
     {% include 'components/hero.html' %}
+
 
 <!-- KPI. 4 блока под главным банером -->
     {% include 'components/kpi.html' %}
@@ -56,7 +133,7 @@
 
     <div class="row g-3">
 
-        {% for child in children %}
+        {% for child in children|slice:":3" %}
         <div class="col-md-6 col-lg-4">
 
             <a href="/{{ city.slug }}/{{ parent.slug }}/{{ child.slug }}/"
@@ -85,12 +162,12 @@
 {% endif %}
 
 
-<!-- SEO BLOCK -->
+<!-- SEO BLOCK  Особенности работ в городе-->
 {% if city_data %}
 <section class="content-card p-4 p-lg-5 mb-4">
 
     <h2 class="section-title mb-4">
-        Особенности работ в {{ city.name }}
+        Особенности работ в {{ city.in_city }}
     </h2>
 
     <div class="row g-4">
@@ -129,6 +206,11 @@
 {% endif %}
 
 
+{% include 'components/services/advantages.html' %}
+
+{% include 'components/services/work_steps.html' %}
+
+
 
 <!-- CONTENT -->
 <section class="content-card p-4 p-lg-5 mb-4">
@@ -146,6 +228,8 @@
 
 
 <!-- PRICE -->
+{% include 'components/price.html' %}
+
 <section class="content-card p-4 p-lg-5 mb-4">
 
     <h2 class="section-title mb-4">
@@ -161,16 +245,116 @@
 </section>
 
 
+{% include 'components/lead_form_gorizont.html' %}
 
-<!-- FAQ -->
-{% if faqs %}
-    {% include 'components/faq.html' %}
+<!-- SEO CLUSTER -->
+{% if seo_cluster %}
+<section class="content-card p-4 p-lg-5 mb-4">
+
+    <h2 class="section-title mb-4">
+
+        Все услуги в {{ city.in_city }}
+
+    </h2>
+
+    <div class="d-flex flex-wrap gap-2">
+
+        {% for item in seo_cluster %}
+
+            <a href="{{ item.get_absolute_url }}"
+               class="btn btn-outline-secondary btn-sm">
+
+                {{ item.title }}
+
+            </a>
+
+        {% endfor %}
+
+    </div>
+
+</section>
 {% endif %}
 
 
 
-<!-- CTA -->
+
+
+<!-- SEO-блок -->
+{% if portfolio_cases %}
+
+{% endif %}
+
+
+
+
+<!-- Random Первый position Блок -->
+
+<!-- Random position -->
+{% for section in page_sections %}
+
+    <!-- Portfolio -->
+
+    {% if section == 'portfolio_cases' %}
+        {% include 'components/portfolio_cases.html' %}
+    {% endif %}
+
+
+    <!-- Кейсы -->
+
+    {% if section == 'reviews' %}
+        {% include 'components/reviews.html' %}
+    {% endif %}
+
+
+    <!-- Сопутствующие услуги -->
+    {% if section == 'related_services' %}
+        {% include 'components/related_services.html' %}
+    {% endif %}
+
+    <!-- Why choose as -->
+    {% if section == 'seo_text' %}
+        {% include 'components/seo_blocks.html' %}
+    {% endif %}
+
+    <!-- FAQ -->
+    {% if section == 'faq' %}
+        {% include 'components/faq.html' %}
+    {% endif %}
+
+    <!-- Popular FAQ -->
+    {% if section == 'popular_faq' %}
+        {% include 'components/popular_faq.html' %}
+    {% endif %}
+
+   
+
+
+{% endfor %}
+
+
+<!-- Random Последний position Блок -->
+
+
+
+<!-- CTA Contacts -->
     {% include 'components/cta.html' %}
+
+
+<!-- Районы -->
+{% include 'components/district_pages.html' %}
+
+
+
+
+
+
+
+{% include 'components/contacts.html' %}
+
+
+
+
+
 
 
 <!-- ПЕРЕЛИНКОВКА -->
@@ -182,14 +366,14 @@
 
     <div class="d-flex flex-wrap gap-2">
 
-        {% for c in other_cities %}
+        {% for c in other_cities|slice:":8" %}
 
             {% if c != city %}
 
                 <a href="/{{ c.slug }}/{{ parent.slug }}/"
                    class="btn btn-outline-secondary btn-sm">
 
-                    {{ parent.title }} в {{ c.name }}
+                    {{ parent.title }} в {{ c.in_city  }}
 
                 </a>
 
@@ -200,5 +384,6 @@
     </div>
 
 </section>
+
 
 {% endblock %}

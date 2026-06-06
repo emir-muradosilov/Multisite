@@ -1,5 +1,20 @@
 {% extends 'base.html' %}
+
+{% block title %}
+{{ faq.seo_title|default:faq.question }}
+{% endblock %}
+
+{% block description %}
+{{ faq.seo_description|default:"Ответы на частые вопросы по услугам алмазного бурения и резки." }}
+{% endblock %}
+
+{% block keywords %}
+{{ faq.seo_keywords|default:"FAQ, алмазное бурение, "|add:city.in_city }}
+{% endblock %}
+
+
 {% block extra_head %}
+
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -10,32 +25,156 @@
       "name": "{{ faq.question|escapejs }}",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "{{ faq.answer|escapejs }}"
+        "text": "{{ faq.answer|striptags|escapejs }}"
       }
     }
   ]
 }
 </script>
+
 {% endblock %}
-{% block title %}{{ faq.seo_title|default:faq.question }}{% endblock %}
-{% block description %}{{ faq.seo_description|default:"Ответы на частые вопросы по услугам алмазного бурения и резки." }}{% endblock %}
-{% block keywords %}{{ faq.seo_keywords|default:"вопросы и ответы, услуги, "|add:city.name }}{% endblock %}
+
+
 
 {% block content %}
-<section class="content-card p-4 p-lg-5 mb-4">
-    <nav aria-label="breadcrumb" class="mb-3">
+
+<!-- Хлебные крошки -->
+<section class="content-card p-4 mb-4">
+
+    <nav aria-label="breadcrumb">
+
         <ol class="breadcrumb mb-0">
-            <li class="breadcrumb-item"><a href="/{{ city.slug }}/">Главная</a></li>
-            <li class="breadcrumb-item active" aria-current="page">FAQ</li>
+
+            <li class="breadcrumb-item">
+                <a href="/{{ city.slug }}/">
+                    {{ city.in_city }}
+                </a>
+            </li>
+
+            <li class="breadcrumb-item">
+                FAQ
+            </li>
+
+            <li class="breadcrumb-item active">
+                {{ faq.question }}
+            </li>
+
         </ol>
+
     </nav>
-    <h1 class="h3 mb-3">{{ faq.h1_title|default:faq.question }}</h1>
-    <p class="mb-0">{{ faq.answer }}</p>
+
 </section>
 
-<section class="content-card p-4 p-lg-5">
-    <h2 class="section-title">Нужна консультация?</h2>
-    <p class="mb-3">Оставьте заявку, и мы подберем решение под ваш объект в {{ city.name }}.</p>
-    <a href="/{{ city.slug }}/lead/" class="btn btn-primary">Получить консультацию</a>
+
+
+<!-- HERO -->
+<section class="content-card p-4 p-lg-5 mb-4">
+
+    <h1 class="display-6 fw-bold mb-4">
+
+        {% if faq.h1_title %}
+            {{ faq.h1_title }}
+        {% else %}
+            {{ faq.question }}
+        {% endif %}
+
+    </h1>
+
+    <div class="content-text">
+
+        {{ faq.answer|linebreaks }}
+
+    </div>
+
 </section>
+
+
+
+<!-- CTA -->
+<section class="content-card p-4 p-lg-5 mb-4">
+
+    <h2 class="section-title">
+        Нужна консультация?
+    </h2>
+
+    <p class="mb-4">
+        Оставьте заявку и мы поможем подобрать решение для вашего объекта.
+    </p>
+
+    <button class="btn btn-primary"
+            data-bs-toggle="modal"
+            data-bs-target="#leadModal">
+
+        Получить консультацию
+
+    </button>
+
+</section>
+
+
+
+<!-- RELATED FAQ -->
+{% if related_faqs %}
+<section class="content-card p-4 p-lg-5 mb-4">
+
+    <h2 class="section-title mb-4">
+        Другие вопросы
+    </h2>
+
+    <div class="row g-3">
+
+        {% for item in related_faqs %}
+
+        <div class="col-md-6">
+
+            <a href="/{{ city.slug }}/faq/{{ item.slug }}/"
+               class="text-decoration-none">
+
+                <div class="border rounded-4 p-4 h-100 bg-light">
+
+                    <h3 class="h6 text-dark mb-0">
+
+                        {{ item.question }}
+
+                    </h3>
+
+                </div>
+
+            </a>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</section>
+{% endif %}
+
+
+
+<!-- ГОРОДА -->
+<section class="content-card p-4 p-lg-5">
+
+    <h2 class="section-title mb-4">
+        Работаем в других городах
+    </h2>
+
+    <div class="d-flex flex-wrap gap-2">
+
+        {% for c in other_cities %}
+
+            <a href="/{{ c.slug }}/faq/{{ faq.slug }}/"
+               class="btn btn-outline-secondary btn-sm">
+
+                FAQ — {{ c.name }}
+
+            </a>
+
+        {% endfor %}
+
+    </div>
+
+</section>
+
 {% endblock %}

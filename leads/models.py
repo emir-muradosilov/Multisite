@@ -35,6 +35,11 @@ class Lead(models.Model):
     utm_term = models.CharField(max_length=255, blank=True, null=True)
     utm_content = models.CharField(max_length=255, blank=True, null=True)
 
+    page_url = models.URLField(blank=True)
+    ip_address = models.GenericIPAddressField(blank=True,   null=True)
+    user_agent = models.TextField(blank=True, null=True)
+
+
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='new')
 
     created_at = models.DateTimeField(auto_now_add=True)

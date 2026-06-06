@@ -1,0 +1,38 @@
+
+<section class="content-card p-4 p-lg-5">
+
+    <h2 class="section-title">
+        Контакты
+    </h2>
+    <p>
+                <div itemscope itemtype="http://schema.org">
+                <strong>Телефон:</strong>
+                <a href="tel:{{ contacts.phone|default:'+79780761562' }}" class="link" itemprop="telephone">тел. {{ contacts.phone|default:'+7 978 076 15 62' }}</a>
+                </div>
+    </p>
+    {% if contacts.phone_secondary %}
+    <p>
+        <strong>Доп. телефон:</strong>
+        {{ contacts.phone_secondary }}
+    </p>
+    {% endif %}
+    <p>
+        <strong>Адрес:</strong>
+        г. {{ contacts.address|default:"Москва, работаем по всему городу и области" }}
+    </p>
+    {% if contacts.working_hours %}
+    <p>
+        <strong>Режим работы:</strong>
+        {{ contacts.working_hours }}
+    </p>
+    {% else %}
+    <strong>Режим работы:</strong>
+    Пн-Пт, с 9:30 до 19:00
+    {% endif %}
+    {% if city.price_text %}
+    <p>
+        <strong>Цены:</strong>
+        {{ city.price_text }}
+    </p>
+    {% endif %}
+</section>

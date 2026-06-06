@@ -1,0 +1,41 @@
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "{{ city.name }}",
+      "item": "{{ request.scheme }}://{{ request.get_host }}/{{ city.slug }}/"
+    }
+
+    {% if parent and parent != page %}
+    ,
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "{{ parent.title }}",
+      "item": "{{ request.scheme }}://{{ request.get_host }}/{{ city.slug }}/{{ parent.slug }}/"
+    }
+    {% endif %}
+
+    {% if page %}
+    ,
+    {
+      "@type": "ListItem",
+      "position":
+        {% if parent and parent != page %}
+            3
+        {% else %}
+            2
+        {% endif %},
+      "name": "{{ page.title }}",
+      "item": "{{ request.scheme }}://{{ request.get_host }}{{ page.get_absolute_url }}"
+    }
+    {% endif %}
+
+  ]
+}
+</script>

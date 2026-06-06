@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+
+{% block title %}
+{{ district_page.seo_title }}
+{% endblock %}
+
+{% block description %}
+{{ district_page.seo_description }}
+{% endblock %}
+
+
+{% block extra_head %}
+<link rel="canonical" href="{{ canonical_url }}">
+
+{% if not page_should_index %}
+<meta name="robots" content="noindex,follow">
+{% endif %}
+
+{% endblock %}
+
+
+
+{% block content %}
+
+<section class="content-card p-4 p-lg-5 mb-4">
+
+    <nav aria-label="breadcrumb">
+
+        <ol class="breadcrumb">
+
+            <li class="breadcrumb-item">
+                <a href="/{{ city.slug }}/">
+                    {{ city.in_city }}
+                </a>
+            </li>
+
+            <li class="breadcrumb-item">
+
+                <a href="{{ page.get_absolute_url }}">
+                    {{ page.title }}
+                </a>
+
+            </li>
+
+            <li class="breadcrumb-item active">
+
+                {{ district.name }}
+
+            </li>
+
+        </ol>
+
+    </nav>
+
+    <h1 class="section-title mb-4">
+
+        {{ page.title }}
+        в районе
+        {{ district.name }}
+
+    </h1>
+
+    <div class="content-text">
+
+        {{ district_page.content|safe }}
+
+    </div>
+
+</section>
+
+{% endblock %}

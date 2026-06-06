@@ -69,6 +69,12 @@ INSTALLED_APPS = [
     'django.contrib.sitemaps',
     'cities.apps.CitiesConfig',
     'pages.apps.PagesConfig',
+    'ratelimit',
+    'compressor',
+    'ckeditor',
+#    'settings_site',
+    'core.apps.CoreConfig',
+
 ]
 
 AUTH_USER_MODEL = 'users.User'
@@ -80,6 +86,7 @@ LOGOUT_REDIRECT_URL = '/login/'
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -87,6 +94,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'config.middleware.UTMMiddleware',
+    
 ]
 
 ROOT_URLCONF = 'config.urls'
@@ -101,15 +109,36 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'seo.views.seo_context',
+#                'seo.views.seo_context',
                 'core.context_processors.menu_services',
-
+                'core.context_processors.global_cities',
+#                'pages.context_processors.seo_context',
+                'cities.context_processors.all_cities',
+#                'settings_site.context_processors.site_settings',
+                'core.context_processors.site_settings',
+#                'core.context_processors.current_contacts',
+                'core.context_processors.homepage_data',
                 ],
         },
     },
 ]
 
 WSGI_APPLICATION = 'config.wsgi.application'
+
+
+
+
+STATICFILES_FINDERS = [
+
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+
+    'compressor.finders.CompressorFinder',
+]
+
+
+
 
 
 # Database
@@ -185,5 +214,44 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
 
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+STATICFILES_STORAGE = (
+    'whitenoise.storage.CompressedManifestStaticFilesStorage',
+    )
+
+CACHES = {
+    'default': {
+        'BACKEND': (
+            'django.core.cache.backends.locmem.'
+            'LocMemCache'
+        ),
+        'LOCATION': 'multisite-cache',
+    }
+}
+
+
+
+
+APPEND_SLASH = True
+
+
+FILE_UPLOAD_PERMISSIONS = 0o644
+
+DATA_UPLOAD_MAX_MEMORY_SIZE = 10485760
+FILE_UPLOAD_MAX_MEMORY_SIZE = 10485760
+
+
+
+SECURE_BROWSER_XSS_FILTER = True
+
+SECURE_CONTENT_TYPE_NOSNIFF = True
+
+X_FRAME_OPTIONS = 'DENY'
+
+SESSION_COOKIE_SECURE = False
+CSRF_COOKIE_SECURE = False
+
+
+
+
+
 

@@ -1,0 +1,73 @@
+<div class="modal fade"
+     id="cityModal"
+     tabindex="-1"
+     aria-hidden="true">
+
+    <div class="modal-dialog modal-xl modal-dialog-scrollable">
+
+        <div class="modal-content">
+
+            <div class="modal-header">
+
+                <h5 class="modal-title">
+                    Выберите город
+                </h5>
+
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal">
+                </button>
+
+            </div>
+
+            <div class="modal-body">
+
+                <!-- SEARCH -->
+
+                <input type="text"
+                       id="citySearch"
+                       class="form-control mb-4"
+                       placeholder="Поиск города...">
+
+                <!-- CITIES -->
+
+                <div class="row" id="cityList">
+
+                    {% regroup all_cities by name.0 as city_groups %}
+
+                    {% for group in city_groups %}
+
+                    <div class="col-md-3 mb-4">
+
+                        <h5 class="mb-3">
+                            {{ group.grouper }}
+                        </h5>
+
+                        <div class="d-flex flex-column gap-2">
+
+                            {% for c in group.list %}
+
+                            <a href="/{{ c.slug }}/"
+                               class="text-decoration-none city-item">
+
+                                {{ c.name }}
+
+                            </a>
+
+                            {% endfor %}
+
+                        </div>
+
+                    </div>
+
+                    {% endfor %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

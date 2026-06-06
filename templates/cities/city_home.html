@@ -17,33 +17,26 @@
 {% endblock %}
 
 {% block content %}
-<section class="content-card p-4 mb-4">
-    <h1 class="display-5 fw-bold mb-3">{{ city.h1_title|default:"Алмазное бурение в"|add:" "|add:city.name }}</h1>
-    <p class="lead mb-4">Работаем по договору, соблюдаем сроки и фиксируем смету до старта работ.</p>
-    <div class="d-flex gap-2 flex-wrap">
-        <a href="/{{ city.slug }}/lead/" class="btn btn-primary btn-sm">Оставить заявку</a>
-        {% if city.phone %}<a href="tel:{{ city.phone }}" class="btn btn-outline-light btn-lg">Позвонить</a>{% endif %}
-    </div>
-</section>
+
+
+<!-- Главный баннер -->
+
+    {% include 'components/hero_city_home.html' %}
 
 
 
-<section class="mb-4">
-    <div class="row g-3">
-        <div class="col-md-3"><div class="content-card p-4 mb-4"><strong>от 5 лет</strong><br><span class="muted">опыт специалистов</span></div></div>
-        <div class="col-md-3"><div class="content-card p-4 mb-4"><strong>24/7</strong><br><span class="muted">прием заявок</span></div></div>
-        <div class="col-md-3"><div class="content-card p-4 mb-4"><strong>до 12 мес.</strong><br><span class="muted">гарантия на работы</span></div></div>
-        <div class="col-md-3"><div class="content-card p-4 mb-4"><strong>1 день</strong><br><span class="muted">выезд на объект</span></div></div>
-    </div>
-</section>
+
+
+{% include 'components/four_block.html' %}
+
 
 <section class="content-card p-4 p-lg-5 mb-4">
     <h2 class="section-title">Услуги в {{ city.name }} с ценами</h2>
     <div class="row g-3 mb-4">
-        {% for service_page in city.service_pages.all %}
+        {% for service_page in city.service_pages.all|slice:":6" %}
         <div class="col-md-6 col-lg-4">
-            <a class="text-decoration-none" href="/{{ city.slug }}/{{ service_page.service.slug }}/{{ service_page.slug }}/">
-                <div class="card h-100 border-0 bg-light-subtle">
+            <a class="text-decoration-none" href="{{ service_page.get_absolute_url }}">
+                <div class="service-card">
                     <div class="card-body">
                         <h3 class="h5 mb-2 text-dark">{{ service_page.title }}</h3>
                         <p class="mb-0 text-secondary">Подробные условия, цены и сроки по услуге.</p>
@@ -57,8 +50,81 @@
         </div>
         {% endfor %}
     </div>
-    <a href="/{{ city.slug }}/lead/" class="btn btn-primary">Рассчитать стоимость</a>
+    <button class="btn btn-primary btn-sm"
+        data-bs-toggle="modal"
+        data-bs-target="#leadModal">
+    Оставить заявку
+</button>
 </section>
+
+
+<!-- Выполняемые работы -->
+{% include 'components/Work_type_home.html' %}
+
+
+<!-- Расценки на работы -->
+
+{% if site_settings.price_tables.all %}
+<div class="content-card p-4 p-lg-5 mb-4 row">
+    {% for table in site_settings.price_tables.all %}
+    <div class="col-lg-6">
+        <section class="content-card p-4 h-100">
+            <h2 class="section-title mb-4">
+                {{ table.title }}
+            </h2>
+            <div class="table-responsive">
+                <table class="table table-striped align-middle">
+                    <thead>
+                        <tr>
+                            <th>
+                                {{ table.service_column_name }}
+                            </th>
+                            {% if table.show_unit %}
+                            <th>
+                                {{ table.unit_column_name }}
+                            </th>
+                            {% endif %}
+
+                            {% if table.show_price %}
+                            <th>
+                                {{ table.price_column_name }}
+                            </th>
+                            {% endif %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in table.items.all %}
+                        <tr>
+                            <td>
+                                {{ item.service }}
+                            </td>
+                            {% if table.show_unit %}
+                            <td>
+                                {{ item.unit }}
+                            </td>
+                            {% endif %}
+                            {% if table.show_price %}
+                            <td>
+                                {{ item.price }}
+                            </td>
+                            {% endif %}
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+
+
+
+
+
+
 
 <section class="content-card p-4 p-lg-5 mb-4">
     <h2 class="section-title">Почему выбирают нас в {{ city.name }}</h2>
@@ -76,23 +142,9 @@
     </ol>
 </section>
 
-<section class="content-card p-4 p-lg-5 mb-4">
-    <h2 class="section-title">Получить расчет стоимости</h2>
-    <form method="post" action="/{{ city.slug }}/lead/">
-        {% csrf_token %}
-        <div class="row g-3">
-            <div class="col-md-6">
-                <input type="text" name="name" class="form-control form-control-lg" placeholder="Ваше имя" required>
-            </div>
-            <div class="col-md-6">
-                <input type="text" name="phone" class="form-control form-control-lg" placeholder="Телефон" required>
-            </div>
-            <div class="col-12">
-                <button class="btn btn-success btn-lg w-100">Отправить заявку</button>
-            </div>
-        </div>
-    </form>
-</section>
+
+{% include 'components/lead_form_gorizont.html' %}
+
 
 <section class="content-card p-4 p-lg-5 mb-4">
     <h2 class="section-title">Частые вопросы</h2>
@@ -121,6 +173,14 @@
         <div class="col-md-6"><div class="kpi-card"><strong>Марина, {{ city.name }}</strong><p class="mb-0 muted">Оперативно приехали, проконсультировали и сделали качественно.</p></div></div>
     </div>
 </section>
+
+
+    <!-- Popular FAQ -->
+    {% if section == 'popular_faq' %}
+        {% include 'components/popular_faq.html' %}
+    {% endif %}
+
+
 
 <section class="content-card p-4 p-lg-5 mb-4">
     <h2 class="section-title">Полезная информация</h2>

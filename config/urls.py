@@ -18,17 +18,24 @@ from django.contrib import admin
 from django.urls import path
 from django.urls import include
 from django.contrib.sitemaps.views import sitemap
-from cities.sitemaps import CitySitemap
+#from cities.sitemaps import CitySitemap
 from .views import robots_txt
 from pages.sitemaps import (
+    StaticSitemap,
     CitySitemap,
     ServicePageSitemap,
     FAQSitemap,
 )
 
+from django.conf import settings
+from django.conf.urls.static import static
+
+
+
 sitemaps = {
-    'cities': CitySitemap,
-    'pages': ServicePageSitemap,
+    'static': StaticSitemap,
+#    'cities': CitySitemap,
+    'services': ServicePageSitemap,
     'faq': FAQSitemap,
 }
 
@@ -44,3 +51,8 @@ urlpatterns = [
     
     
 ]
+
+urlpatterns += static(
+    settings.MEDIA_URL,
+    document_root=settings.MEDIA_ROOT
+)

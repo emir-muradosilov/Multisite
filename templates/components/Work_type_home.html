@@ -1,0 +1,54 @@
+<section class="content-card p-4 p-lg-5 mb-4">
+
+    <h2 class="section-title mb-4">
+        Выполняемые работы
+    </h2>
+
+    <div class="row g-4">
+
+        {% for work in work_types %}
+
+        <div class="col-md-6 col-xl-3">
+
+            <div class="card h-100 border-0 shadow-sm">
+
+                {% if work.image %}
+                <img src="{{ work.image.url }}"
+                     class="card-img-top"
+                     alt="{{ work.title }}">
+                {% endif %}
+
+                <div class="card-body">
+
+                    <h3 class="h5">
+                        {{ work.title }}
+                    </h3>
+
+                    <p class="text-muted small">
+                        {{ work.description }}
+                    </p>
+
+                </div>
+
+                <div class="card-footer bg-white border-0">
+
+                    <button
+                        class="btn btn-primary w-100"
+                        data-bs-toggle="modal"
+                        data-bs-target="#leadModal">
+
+                        {{ work.button_text }}
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</section>

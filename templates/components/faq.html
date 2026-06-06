@@ -6,7 +6,7 @@
 
     <div class="accordion" id="faqAccordion">
 
-        {% for faq_item in faqs %}
+        {% for faq_item in faqs|slice:":8" %}
         <div class="accordion-item">
 
             <h3 class="accordion-header">
@@ -46,3 +46,25 @@
     </div>
 
 </section>
+
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+
+    {% for faq_item in faqs|slice:":8" %}
+    {
+      "@type": "Question",
+      "name": "{{ faq_item.question|escapejs }}",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "{{ faq_item.answer|striptags|escapejs }}"
+      }
+    }{% if not forloop.last %},{% endif %}
+    {% endfor %}
+
+  ]
+}
+</script>

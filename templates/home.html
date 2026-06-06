@@ -1,0 +1,313 @@
+{% extends 'base.html' %}
+
+
+
+{% block content %}
+
+
+{% block extra_head %}
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Алмазное бурение",
+  "url": "{{ request.build_absolute_uri }}"
+}
+</script>
+
+{% endblock %}
+
+<!-- Главный баннер -->
+    {% include 'components/hero_home.html' %}
+
+
+<!-- 4 блока -->
+{% include 'components/four_block.html' %}
+
+
+<!-- Выполняемые работы -->
+{% include 'components/Work_type_home.html' %}
+
+
+
+
+<!-- О компании -->
+
+{% if site_settings.homepage_text %}
+<section class="content-card p-4 p-lg-5 mb-4">
+    <h2 class="section-title mb-4">
+        {{ site_settings.homepage_text_h2|safe  }}
+    </h2>
+    <div class="content-text">
+        {{ site_settings.homepage_text|safe  }}
+    </div>
+</section>
+{% endif %}
+
+
+<!-- Lead -->
+    {% include 'components/lead_form_reusable.html' %}
+
+
+
+<!-- Наши преимущества -->
+{% if site_settings.homepage_advantages %}
+<section class="content-card p-4 p-lg-5 mb-4">
+    <h2 class="section-title mb-4">
+        {{ site_settings.homepage_advantages_h2|safe  }}
+    </h2>
+    <div class="content-text">
+        {{ site_settings.homepage_advantages|safe  }}
+    </div>
+</section>
+{% endif %}
+
+
+<!-- Расценки на работы -->
+
+{% if site_settings.price_tables.all %}
+<div class="content-card p-4 p-lg-5 mb-4 row">
+    {% for table in site_settings.price_tables.all %}
+    <div class="col-lg-6">
+        <section class="content-card p-4 h-100">
+            <h2 class="section-title mb-4">
+                {{ table.title }}
+            </h2>
+            <div class="table-responsive">
+                <table class="table table-striped align-middle">
+                    <thead>
+                        <tr>
+                            <th>
+                                {{ table.service_column_name }}
+                            </th>
+                            {% if table.show_unit %}
+                            <th>
+                                {{ table.unit_column_name }}
+                            </th>
+                            {% endif %}
+
+                            {% if table.show_price %}
+                            <th>
+                                {{ table.price_column_name }}
+                            </th>
+                            {% endif %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in table.items.all %}
+                        <tr>
+                            <td>
+                                {{ item.service }}
+                            </td>
+                            {% if table.show_unit %}
+                            <td>
+                                {{ item.unit }}
+                            </td>
+                            {% endif %}
+                            {% if table.show_price %}
+                            <td>
+                                {{ item.price }}
+                            </td>
+                            {% endif %}
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+
+<!-- CTA Contacts -->
+    {% include 'components/cta.html' %}
+
+
+
+<!-- Примеры работ -->
+ <section class="content-card p-4 p-lg-5 mb-4">
+    <h2 class="section-title mb-4">
+        Последние выполненные объекты
+    </h2>
+    <div class="row g-3">
+        {% for case in portfolio_cases %}
+        <div class="col-md-6 col-lg-4">
+            <a href="{{ case.get_absolute_url }}"
+               class="text-decoration-none">
+                <div class="border rounded-4 p-4 h-100 bg-light">
+                    {% if case.image %}
+                        <img
+                            src="{{ case.image.url }}"
+                            alt="{{ case.title }}"
+                            title="{{ case.title }}"
+                            loading="lazy"
+                            class="img-fluid rounded-3 mb-3">
+                        {% else %}
+                        <img
+                            src="/media/defaults/no-image.webp"
+                            alt="{{ case.title }}"
+                            loading="lazy">
+                    {% endif %}
+
+                    <h3 class="h5 text-dark mb-2">
+                        {{ case.title }}
+                    </h3>
+
+                    <p class="text-secondary mb-3">
+                        {{ case.short_description|truncatechars:120 }}
+                    </p>
+
+                    {% if case.address %}
+                    <div class="small text-muted">
+                        📍 {{ case.address }}
+                    </div>
+                    {% endif %}
+
+                </div>
+
+            </a>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</section>
+
+
+<!-- Отзывы -->
+{% if reviews %}
+<section class="content-card p-4 p-lg-5 mb-4">
+    <h2 class="section-title mb-4">
+        Отзывы клиентов
+    </h2>
+    <div class="row g-4">
+        {% for review in reviews %}
+        <div class="col-md-6">
+            <div class="border rounded-4 p-4 h-100 bg-light">
+                <div class="mb-2">
+                    {% for i in "12345" %}
+                        {% if forloop.counter <= review.rating %}
+                            ⭐
+                        {% endif %}
+                    {% endfor %}
+                </div>
+                <p class="mb-3">
+                    {{ review.text }}
+                </p>
+                <strong>
+                    {{ review.author }}
+                </strong>
+                {% if review.city %}
+                <div class="small text-muted">
+                    {{ review.city.name }}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+{% endif %}
+
+
+
+<!-- SEO -->
+
+<section class="content-card p-4 p-lg-5">
+
+    <h2 class="section-title mb-4">
+        Профессиональные услуги алмазного бурения
+    </h2>
+
+    <p>
+        Выполняем алмазное бурение отверстий,
+        резку бетона, демонтаж конструкций
+        и канатную резку на объектах любой сложности.
+    </p>
+
+</section>
+
+
+
+
+
+<!-- FAQ -->
+{% if faqs %}
+
+<section class="content-card p-4 p-lg-5 mb-4">
+    <h2 class="section-title mb-4">
+        Часто задаваемые вопросы
+    </h2>
+    <div class="accordion"
+         id="faqAccordion">
+        {% for faq in faqs %}
+        <div class="accordion-item">
+            <h2 class="accordion-header">
+                <button
+                    class="accordion-button collapsed"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#faq{{ faq.id }}">
+                    {{ faq.question }}
+                </button>
+            </h2>
+            <div id="faq{{ faq.id }}"
+                 class="accordion-collapse collapse"
+                 data-bs-parent="#faqAccordion">
+                <div class="accordion-body">
+                    {{ faq.answer|safe }}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+{% endif %}
+
+
+
+
+
+    <!-- Lead -->
+    {% include 'components/lead_form_reusable.html' %}
+
+
+
+
+
+
+
+<!-- Lead -->
+    {% include 'components/contacts.html' %}
+
+
+<!-- CITIES -->
+
+<section class="content-card p-4 p-lg-5 mb-4">
+
+    <h2 class="section-title mb-4">
+        Наши представители есть в городах:
+    </h2>
+
+    <div class="d-flex flex-wrap gap-2">
+
+        {% for city in cities %}
+
+            <a href="/{{ city.slug }}/"
+               class="btn btn-outline-secondary btn-sm">
+                {{ city.name  }}
+
+            </a>
+
+        {% endfor %}
+
+    </div>
+
+</section>
+
+{% endblock %}

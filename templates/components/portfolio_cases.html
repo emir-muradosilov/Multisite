@@ -1,0 +1,56 @@
+<section class="content-card p-4 p-lg-5 mb-4">
+
+    <h2 class="section-title mb-4">
+        Последние выполненные объекты
+    </h2>
+
+    <div class="row g-3">
+
+        {% for case in portfolio_cases %}
+
+        <div class="col-md-6 col-lg-4">
+
+            <a href="{{ case.get_absolute_url }}"
+               class="text-decoration-none">
+
+                <div class="border rounded-4 p-4 h-100 bg-light">
+
+                    {% if case.image %}
+                        <img
+                            src="{{ case.image.url }}"
+                            alt="{{ case.title }}"
+                            title="{{ case.title }}"
+                            loading="lazy"
+                            class="img-fluid rounded-3 mb-3">
+                        {% else %}
+                        <img
+                            src="/media/defaults/no-image.webp"
+                            alt="{{ case.title }}"
+                            loading="lazy">
+                    {% endif %}
+
+                    <h3 class="h5 text-dark mb-2">
+                        {{ case.title }}
+                    </h3>
+
+                    <p class="text-secondary mb-3">
+                        {{ case.short_description|truncatechars:120 }}
+                    </p>
+
+                    {% if case.address %}
+                    <div class="small text-muted">
+                        📍 {{ case.address }}
+                    </div>
+                    {% endif %}
+
+                </div>
+
+            </a>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</section>

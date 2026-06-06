@@ -1,0 +1,386 @@
+/* =========================
+   UI SYSTEM
+========================= */
+
+:root{
+    --bg:#f4f7fb;
+    --card:#ffffff;
+    --text:#111827;
+    --muted:#6b7280;
+    --line:#e5e7eb;
+
+    --primary:#2563eb;
+    --primary-hover:#1d4ed8;
+
+    --success:#16a34a;
+
+    --radius:20px;
+    --shadow:
+        0 10px 30px rgba(0,0,0,.04);
+
+    --container:1240px;
+}
+
+/* =========================
+   BASE
+========================= */
+
+html{
+    scroll-behavior:smooth;
+}
+
+body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:
+        Inter,
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+
+    line-height:1.6;
+}
+
+.container{
+    max-width:var(--container);
+}
+
+/* =========================
+   TYPOGRAPHY
+========================= */
+
+h1,h2,h3,h4,h5,h6{
+    font-weight:700;
+    line-height:1.2;
+    letter-spacing:-0.02em;
+}
+
+h1{
+    font-size:clamp(2rem,4vw,3.5rem);
+}
+
+h2{
+    font-size:clamp(1.6rem,3vw,2.5rem);
+}
+
+.section-title{
+    margin-bottom:1.5rem;
+}
+
+.lead{
+    font-size:1.1rem;
+}
+
+/* =========================
+   CARDS
+========================= */
+
+.content-card{
+    background:var(--card);
+    border-radius:var(--radius);
+    border:1px solid var(--line);
+    box-shadow:var(--shadow);
+}
+
+.kpi-card{
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding:24px;
+    height:100%;
+}
+
+/* =========================
+   BUTTONS
+========================= */
+
+.btn{
+    border-radius:12px;
+    font-weight:600;
+    padding:.8rem 1.4rem;
+}
+
+.btn-primary{
+    background:var(--primary);
+    border-color:var(--primary);
+}
+
+.btn-primary:hover{
+    background:var(--primary-hover);
+    border-color:var(--primary-hover);
+}
+
+.btn-success{
+    background:var(--success);
+    border-color:var(--success);
+}
+
+/* =========================
+   HEADER
+========================= */
+
+.site-header{
+    background:#fff;
+    border-bottom:1px solid var(--line);
+    position:sticky;
+    top:0;
+    z-index:100;
+    backdrop-filter:blur(10px);
+}
+
+.navbar-brand{
+    font-size:1.1rem;
+}
+
+.nav-link{
+    color:var(--text);
+    font-weight:500;
+}
+
+.nav-link:hover{
+    color:var(--primary);
+}
+
+/* =========================
+   HERO
+========================= */
+
+.hero{
+    padding:60px;
+}
+
+.hero-badges{
+    display:flex;
+    flex-wrap:wrap;
+    gap:12px;
+    margin-top:24px;
+}
+
+.hero-badge{
+    background:#eef2ff;
+    color:#3730a3;
+    padding:10px 14px;
+    border-radius:999px;
+    font-size:.9rem;
+    font-weight:600;
+}
+
+/* =========================
+   FORMS
+========================= */
+
+.form-control{
+    border-radius:14px;
+    min-height:56px;
+    border:1px solid var(--line);
+}
+
+.form-control:focus{
+    box-shadow:none;
+    border-color:var(--primary);
+}
+
+/* =========================
+   FAQ
+========================= */
+
+.accordion-item{
+    border-radius:14px !important;
+    overflow:hidden;
+    border:1px solid var(--line);
+    margin-bottom:12px;
+}
+
+.accordion-button{
+    font-weight:600;
+}
+
+/* =========================
+   FOOTER
+========================= */
+
+.site-footer{
+    background:#fff;
+    border-top:1px solid var(--line);
+}
+
+/* =========================
+   MOBILE CTA
+========================= */
+
+.mobile-cta{
+    position:fixed;
+    left:0;
+    right:0;
+    bottom:0;
+
+    padding:12px;
+    background:#fff;
+    border-top:1px solid var(--line);
+
+    z-index:100;
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media(max-width:992px){
+
+    .hero{
+        padding:32px 24px;
+    }
+
+    .navbar-brand{
+        font-size:1rem;
+    }
+
+    main{
+        padding-bottom:90px;
+    }
+
+}
+/* =========================
+   ANIMATIONS
+========================= */
+
+.reveal{
+    opacity:0;
+    transform:translateY(30px);
+    transition:
+        opacity .7s ease,
+        transform .7s ease;
+}
+
+.reveal.active{
+    opacity:1;
+    transform:none;
+}
+
+/* =========================
+   PREMIUM CARD
+========================= */
+
+.content-card{
+    transition:
+        transform .25s ease,
+        box-shadow .25s ease;
+}
+
+.content-card:hover{
+    transform:translateY(-4px);
+
+    box-shadow:
+        0 20px 50px rgba(0,0,0,.08);
+}
+
+/* =========================
+   SECTION SPACING
+========================= */
+
+section{
+    margin-bottom:32px;
+}
+
+/* =========================
+   CTA BAR
+========================= */
+
+.floating-cta{
+
+    position:fixed;
+
+    right:24px;
+    bottom:24px;
+
+    z-index:200;
+}
+
+.floating-cta .btn{
+
+    width:64px;
+    height:64px;
+
+    border-radius:999px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    font-size:1.5rem;
+
+    box-shadow:
+        0 10px 30px rgba(37,99,235,.3);
+}
+
+/* =========================
+   SERVICE CARDS
+========================= */
+
+.service-card{
+
+    background:#fff;
+
+    border-radius:20px;
+
+    padding:28px;
+
+    border:1px solid var(--line);
+
+    height:100%;
+
+    transition:.25s ease;
+}
+
+.service-card:hover{
+
+    transform:translateY(-6px);
+
+    border-color:#c7d2fe;
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media(max-width:992px){
+
+    .floating-cta{
+        right:16px;
+        bottom:90px;
+    }
+
+}
+
+
+/* =========================
+   DROPDOWN
+========================= */
+
+.dropdown-menu{
+    border:none;
+    border-radius:16px;
+    box-shadow:0 10px 30px rgba(0,0,0,.08);
+    padding:12px;
+    margin-top:12px;
+}
+
+.dropdown-item{
+    border-radius:10px;
+    padding:10px 14px;
+    transition:.2s;
+}
+
+.dropdown-item:hover{
+    background:#f3f4f6;
+}
+
+.nav-link.active{
+    color:var(--primary);
+}
+
+
+
+

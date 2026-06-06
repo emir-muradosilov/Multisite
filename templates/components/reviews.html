@@ -1,0 +1,49 @@
+{% if reviews %}
+<section class="content-card p-4 p-lg-5 mb-4">
+
+    <h2 class="section-title mb-4">
+        Отзывы клиентов
+    </h2>
+
+    <div class="row g-4">
+
+        {% for review in reviews %}
+
+        <div class="col-md-6">
+
+            <div class="border rounded-4 p-4 h-100 bg-light">
+
+                <div class="mb-2">
+
+                    {% for i in "12345" %}
+                        {% if forloop.counter <= review.rating %}
+                            ⭐
+                        {% endif %}
+                    {% endfor %}
+
+                </div>
+
+                <p class="mb-3">
+                    {{ review.text }}
+                </p>
+
+                <strong>
+                    {{ review.author }}
+                </strong>
+
+                {% if review.city %}
+                <div class="small text-muted">
+                    {{ review.city.name }}
+                </div>
+                {% endif %}
+
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</section>
+{% endif %}

@@ -1,54 +1,78 @@
-<section class="content-card p-4 p-lg-5 mb-4">
+<section class="hero-section content-card mb-4 position-relative overflow-hidden"
 
+{% if site_settings.hero_background %}
+style="
+background-image:
+linear-gradient(
+rgba(0,0,0,0.55),
+rgba(0,0,0,0.55)
+),
+url('{{ site_settings.hero_background.url }}');
 
-    <div class="row align-items-center g-4">
+background-size: cover;
+background-position: center;
+background-repeat: no-repeat;
+"
+{% endif %}
+>
 
-        <div class="col-lg-8">
+    <div class="p-4 p-lg-5">
 
-            <h1 class="display-5 fw-bold mb-3">
-                {{ page.h1_title|default:page.title }}
-            </h1>
+        <div class="row align-items-center g-4">
 
-            <p class="lead text-secondary mb-4">
-                Профессиональные услуги в {{ city.name }}.
-                Работаем быстро, аккуратно и с гарантией результата.
-            </p>
+            <div class="col-lg-8 text-white">
 
-            <div class="d-flex flex-wrap gap-2">
+                <h1 class="display-5 fw-bold mb-3">{{ page.h1_title|default:page.title }}</h1>
 
-                <a href="/{{ city.slug }}/lead/"
-                   class="btn btn-primary btn-lg">
-                    Рассчитать стоимость
-                </a>
+                <p class="lead mb-4 text-light">
+                    Профессиональные услуги в {{ city.name_where }} и {{ city.name_oblast_where }}. 
+                    Работаем быстро, аккуратно и с гарантией результата.
+                </p>
 
-                {% if city.phone %}
-                <a href="tel:{{ city.phone }}"
-                   class="btn btn-outline-dark btn-lg">
-                    Позвонить
-                </a>
-                {% endif %}
+                <div class="d-flex flex-wrap gap-2">
+
+                    <button class="btn btn-primary btn-lg"
+                            data-bs-toggle="modal"
+                            data-bs-target="#leadModal">
+                        Рассчитать стоимость
+                    </button>
+
+                    {% if city.phone %}
+                    <a href="tel:{{ city.phone }}"
+                       class="btn btn-light btn-lg">
+
+                        Позвонить
+
+                    </a>
+                    {% endif %}
+
+                </div>
 
             </div>
 
-        </div>
+            <div class="col-lg-4">
 
-        <div class="col-lg-4">
+                <div class="hero-info-card p-4">
 
-            <div class="content-card p-4 bg-light border-0">
+                    <div class="mb-3">
+                        <strong class="textline">Выезд:</strong><br>
+                        <p class="textline">в день обращения</p>
+                    </div>
 
-                <div class="mb-3">
-                    <strong>Выезд:</strong><br>
-                    в день обращения
-                </div>
+                    <div class="mb-3">
+                        <strong class="textline">Гарантия:</strong><br>
+                        <p class="textline"></p>выполняем строго по ТЗ
+                    </div>
 
-                <div class="mb-3">
-                    <strong>Гарантия:</strong><br>
-                    до 12 месяцев
-                </div>
+                    <div class="mb-3">
+                        <strong class="textline">Профессионализм:</strong><br>
+                        <p class="textline"></p>Предложим варианты под ваши задачи
+                    </div>
+                    <div>
+                        <strong class="textline">Работаем по:</strong><br>
+                        <p class="textline">{{ city.in_city }} и {{ city.in_oblast }}</p>
+                    </div>
 
-                <div>
-                    <strong>Работаем:</strong><br>
-                    {{ city.name }} и область
                 </div>
 
             </div>

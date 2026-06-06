@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+
+{% block title %}
+{{ case.seo_title|default:case.title }}
+{% endblock %}
+
+{% block description %}
+{{ case.seo_description|default:case.short_description }}
+{% endblock %}
+
+{% block content %}
+
+<section class="content-card p-4 p-lg-5 mb-4">
+
+    <h1 class="display-6 mb-4">
+        {{ case.title }}
+    </h1>
+
+    {% if case.image %}
+        <img src="{{ case.image.url }}"
+             class="img-fluid rounded-4 mb-4">
+    {% endif %}
+
+    <div class="row g-4 mb-4">
+
+        {% if case.object_name %}
+        <div class="col-md-6">
+            <strong>Объект:</strong><br>
+            {{ case.object_name }}
+        </div>
+        {% endif %}
+
+        {% if case.address %}
+        <div class="col-md-6">
+            <strong>Адрес:</strong><br>
+            {{ case.address }}
+        </div>
+        {% endif %}
+
+        {% if case.work_duration %}
+        <div class="col-md-6">
+            <strong>Срок работ:</strong><br>
+            {{ case.work_duration }}
+        </div>
+        {% endif %}
+
+        {% if case.price %}
+        <div class="col-md-6">
+            <strong>Стоимость:</strong><br>
+            {{ case.price }}
+        </div>
+        {% endif %}
+
+    </div>
+
+    <div class="content-text">
+        {{ case.content|safe|linebreaks }}
+    </div>
+
+</section>
+
+{% if related_cases %}
+
+<section class="content-card p-4 p-lg-5">
+
+    <h2 class="section-title mb-4">
+        Другие объекты
+    </h2>
+
+    <div class="row g-3">
+
+        {% for item in related_cases %}
+
+        <div class="col-md-4">
+
+            <a href="{{ item.get_absolute_url }}"
+               class="text-decoration-none">
+
+                <div class="border rounded-4 p-4 h-100">
+
+                    <h3 class="h5 text-dark">
+                        {{ item.title }}
+                    </h3>
+
+                    <p class="text-secondary mb-0">
+                        {{ item.short_description|truncatechars:120 }}
+                    </p>
+
+                </div>
+
+            </a>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</section>
+
+{% endif %}
+
+{% endblock %}

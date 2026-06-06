@@ -1,0 +1,94 @@
+<section class="hero-section content-card mb-4 position-relative overflow-hidden"
+
+{% if site_settings.hero_background %}
+style="
+background-image:
+linear-gradient(
+rgba(0,0,0,0.55),
+rgba(0,0,0,0.55)
+),
+url('{{ site_settings.hero_background.url }}');
+
+background-size: cover;
+background-position: center;
+background-repeat: no-repeat;
+"
+{% endif %}
+>
+
+    <div class="p-4 p-lg-5">
+
+        <div class="row align-items-center g-4">
+
+            <div class="col-lg-8 text-white">
+
+                <h1 class="display-5 fw-bold mb-3">
+        {% block title %}
+            {% if page %}
+                {{ page.seo_title|default:page.title }}
+            {% elif city %}
+                {{ city.seo_title|default:city.in_city }}
+            {% else %}
+                {{ site_settings.homepage_title }}
+            {% endif %}
+        {% endblock %}
+                </h1>
+
+                <p class="lead mb-4 text-light">
+                    Профессиональные услуги по всей России.
+                    Работаем быстро, аккуратно и с гарантией результата.
+                </p>
+
+                <div class="d-flex flex-wrap gap-2">
+
+                    <button class="btn btn-primary btn-lg"
+                            data-bs-toggle="modal"
+                            data-bs-target="#leadModal">
+
+                        Рассчитать стоимость
+
+                    </button>
+
+                    {% if city.phone %}
+                    <a href="tel:{{ city.phone }}"
+                       class="btn btn-light btn-lg">📞 Позвонить</a>
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+            <div class="col-lg-4">
+
+                <div class="hero-info-card p-4">
+
+                    <div class="mb-3">
+                        <strong class="textline">Выезд:</strong><br>
+                        <p class="textline">в день обращения</p>
+                    </div>
+
+                    <div class="mb-3">
+                        <strong class="textline">Гарантия:</strong><br>
+                        <p class="textline"></p>выполняем строго по ТЗ
+                    </div>
+
+                    <div class="mb-3">
+                        <strong class="textline">Профессионализм:</strong><br>
+                        <p class="textline"></p>Предложим варианты под ваши задачи
+                    </div>
+                    <div>
+
+                    <div>
+                        <strong class="textline">Наши представительства находятся по всей России</strong><br>
+                        <p class="textline">{{ city.in_city }}{{ city.in_oblast }}</p>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>

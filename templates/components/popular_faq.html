@@ -1,0 +1,46 @@
+<section class="content-card p-4 p-lg-5 mb-4">
+
+    <h2 class="section-title mb-4">
+        Популярные вопросы
+    </h2>
+
+    <div class="accordion" id="generatedFaq">
+
+        {% for item in generated_faqs %}
+
+        <div class="accordion-item">
+
+            <h3 class="accordion-header">
+
+                <button class="accordion-button collapsed"
+                        type="button"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#generatedFaq{{ forloop.counter }}">
+
+                    {{ item.question }}
+
+                </button>
+
+            </h3>
+
+            <div id="generatedFaq{{ forloop.counter }}"
+                 class="accordion-collapse collapse"
+                 data-bs-parent="#generatedFaq">
+
+                <div class="accordion-body">
+
+                    Для уточнения деталей по услуге
+                    "{{ page.title }} и {{ city.in_oblast }}"
+                    оставьте заявку через форму сайта.
+
+                </div>
+
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</section>

@@ -1,0 +1,17 @@
+<section class="content-card p-4 p-lg-5 mb-4">
+    <h2 class="section-title">Получить расчет стоимости</h2>
+    <form method="post" action="/{{ city.slug }}/lead/">
+        {% csrf_token %}
+        <div class="row g-3">
+            <div class="col-md-6">
+                <input type="text" name="name" class="form-control form-control-lg" placeholder="Ваше имя" required>
+            </div>
+            <div class="col-md-6">
+                <input type="text" name="phone" class="form-control form-control-lg" placeholder="Телефон" required>
+            </div>
+            <div class="col-12">
+                <button class="btn btn-success btn-lg w-100">Отправить заявку</button>
+            </div>
+        </div>
+    </form>
+</section>

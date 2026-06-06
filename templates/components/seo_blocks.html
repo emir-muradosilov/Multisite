@@ -1,0 +1,23 @@
+{% if seo_blocks %}
+
+    {% for block in seo_blocks %}
+
+    <section class="content-card p-4 p-lg-5 mb-4">
+
+        {% if block.title %}
+        <h2 class="section-title mb-4">
+            {{ block.title }}
+        </h2>
+        {% endif %}
+
+        <div class="content-text">
+
+            {{ block.content|safe|linebreaks }}
+
+        </div>
+
+    </section>
+
+    {% endfor %}
+
+{% endif %}

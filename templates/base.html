@@ -1,109 +1,199 @@
+{% load compress %}
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
 
     {% load static %}
+
+    <meta charset="UTF-8">
+    <meta name="theme-color" content="#ffffff">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+    {% compress css %}
+    <!-- CSS -->
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
     <link rel="stylesheet" href="{% static 'css/layout.css' %}">
     <link rel="stylesheet" href="{% static 'css/components.css' %}">
     <link rel="stylesheet" href="{% static 'css/pages.css' %}">
+    <link rel="stylesheet" href="{% static 'css/ui.css' %}">
 
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    {% endcompress %}
+
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+
+{% if site_settings.favicon %}
+<link rel="icon" href="{{ site_settings.favicon.url }}">
+<link rel="shortcut icon" href="{{ site_settings.favicon.url }}">
+<link rel="apple-touch-icon" href="{{ site_settings.favicon.url }}">
+{% endif %}
+
+    <!-- TITLE -->
     <title>
         {% block title %}
-            {{ page.seo_title|default:page.title|default:"Алмазное бурение" }}
+            {% if page %}
+                {{ page.seo_title|default:page.title }}
+            {% elif city %}
+                {{ city.seo_title|default:city.in_city }}
+            {% else %}
+                {{ site_settings.homepage_title }}
+            {% endif %}
         {% endblock %}
     </title>
 
-    <meta name="description" content="{% block description %}{{ page.seo_description|default:"Алмазное бурение и резка в вашем городе" }}{% endblock %}">
-    <meta name="keywords" content="{% block keywords %}{{ page.seo_keywords|default:"алмазное бурение, резка бетона" }}{% endblock %}">
+    <!-- DESCRIPTION -->
+    <meta name="description"
+          content="{% block description %}
+              {% if page %}
+                  {{ page.seo_description }}
+              {% elif city %}
+                  {{ city.seo_description }}
+              {% else %}
+                  {{ site_settings.homepage_description }}
+              {% endif %}
+          {% endblock %}">
 
-    <!-- 🔥 SEO -->
+    <!-- KEYWORDS -->
+    <meta name="keywords"
+          content="{% block keywords %}
+              {% if page %}
+                  {{ page.seo_keywords }}
+              {% elif city %}
+                  {{ city.seo_keywords }}
+              {% else %}
+                  {{ site_settings.homepage_keywords }}
+              {% endif %}
+          {% endblock %}">
+
+    <!-- ROBOTS -->
     {% if page and page.no_index %}
         <meta name="robots" content="noindex,nofollow">
     {% else %}
         <meta name="robots" content="index,follow">
     {% endif %}
 
+    <!-- CANONICAL -->
     {% if canonical_url %}
         <link rel="canonical" href="{{ canonical_url }}">
     {% endif %}
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- OPEN GRAPH -->
+    <meta property="og:type" content="website">
 
+    <meta property="og:title" content="{% if page %} {{ page.seo_title|default:page.title }}{% elif city %}{{ city.seo_title|default:city.in_city }}{% else %}{{ site_settings.homepage_title }}{% endif %}">
 
+    <meta property="og:description" content="{% if page %}{{ page.seo_description }}{% elif city %}{{ city.seo_description }}{% else %}{{ site_settings.homepage_description }}{% endif %}">
 
-<!-- Open Graph -->
-<meta property="og:type" content="website">
+    <meta property="og:url"content="{{ request.build_absolute_uri }}">
 
-<meta property="og:title"
-      content="{% block og_title %}{{ page.seo_title|default:page.title|default:'Алмазное бурение' }}{% endblock %}">
+    <meta property="og:site_name"
+      content="{{ site_settings.site_name }}">
 
-<meta property="og:description"
-      content="{% block og_description %}{{ page.seo_description|default:'Профессиональные услуги алмазного бурения и резки.' }}{% endblock %}">
+    <meta property="og:locale" content="ru_RU">
 
-<meta property="og:url"
-      content="{{ request.build_absolute_uri }}">
+    <!-- TWITTER -->
+    <meta name="twitter:card" content="summary_large_image">
 
-<meta property="og:site_name"
-      content="Алмазное бурение">
+    <meta name="twitter:title"content="{% if page %}{{ page.seo_title|default:page.title }}{% elif city %}{{ city.seo_title|default:city.in_city }}{% else %}Алмазное бурение{% endif %}">
 
-<meta property="og:locale"
-      content="ru_RU">
+    <meta name="twitter:description"content="{% if page %}{{ page.seo_description }}{% elif city %}{{ city.seo_description }}{% else %}Профессиональные услуги алмазного бурения{% endif %}">
 
-<!-- Twitter -->
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title"
-      content="{% block twitter_title %}{{ page.seo_title|default:page.title }}{% endblock %}">
-<meta name="twitter:description"
-      content="{% block twitter_description %}{{ page.seo_description }}{% endblock %}">
+    {% block extra_head %}{% endblock %}
 
-
-    
-{% block extra_head %}{% endblock %}
 </head>
 
+{% include 'components/city_modal.html' %}
 <body>
 
 <div class="topbar py-2">
     <div class="container d-flex justify-content-between">
-        <span>Работаем по договору. Гарантия на услуги.</span>
         <span>
-            {% if city and city.phone %}
-                {{ city.phone }}
-            {% else %}
-                Бесплатная консультация
-            {% endif %}
+            Работаем по договору. Гарантия на услуги.
+        </span>
+        <span>
+            <div itemscope itemtype="http://schema.org/LocalBusiness">
+                <span>Бесплатная консультация.</span>
+
+
+<a href="tel:{% firstof contacts.phone city.phone site_settings.default_phone %}"
+   class="link"
+   itemprop="telephone">
+
+    тел.
+    {% firstof contacts.phone city.phone site_settings.default_phone %}
+
+</a>
+
+            </div>
         </span>
     </div>
 </div>
 
 <header class="site-header">
+
+
+    
     <nav class="navbar">
         <div class="container py-2 d-flex align-items-center">
 
-            <a class="navbar-brand fw-bold" href="/">
-                Алмазное бурение и канатная резка
-            </a>
+            <a class="navbar-brand d-flex align-items-center gap-2 flex-shrink-0" href="/">
 
+    {% if site_settings.logo %}
+<img src="{{ site_settings.logo.url }}"
+     alt="{{ site_settings.site_name }}"
+     class="site-logo">
+    {% endif %}
+
+    <span>
+        {{ site_settings.site_name }}
+    </span>
+
+</a>
+
+{% if city %}
+<button class="btn btn-outline-secondary btn-sm ms-3"
+        data-bs-toggle="modal"
+        data-bs-target="#cityModal">
+
+    📍 {{ city.name }}
+
+</button>
+{% else %}
+<button class="btn btn-outline-secondary btn-sm ms-3"
+        data-bs-toggle="modal"
+        data-bs-target="#cityModal">
+
+    📍 Выберите город
+
+</button>
+{% endif %}
+            
             <div class="ms-auto d-flex align-items-center gap-3">
 
                 {% if menu_services %}
                     {% for service in menu_services %}
 
-                        <div class="dropdown">
+<!-- ✅ КЛИКАБЕЛЬНАЯ СТРАНИЦА -->
 
-                            <!-- ✅ КЛИКАБЕЛЬНАЯ СТРАНИЦА -->
+
+<!--
+                        <div class="dropdown">
                             <a class="nav-link"
                                href="/{{ menu_city.slug }}/{{ service.slug }}/">
                                 {{ service.title }}
                             </a>
-
                             {% if service.children.exists %}
                             <div class="dropdown-menu">
-
                                 {% for child in service.children.all %}
                                     {% if child.is_published and child.show_in_menu %}
                                         <a class="dropdown-item"
@@ -112,19 +202,68 @@
                                         </a>
                                     {% endif %}
                                 {% endfor %}
-
                             </div>
                             {% endif %}
-
                         </div>
+-->
 
-                    {% endfor %}
+<div class="dropdown d-flex align-items-center">
+
+    <!-- КЛИКАБЕЛЬНАЯ СТРАНИЦА -->
+    <a class="nav-link {% if page and page.parent %}
+            {% if service.id == page.parent.id %}active{% endif %}
+        {% else %}
+            {% if page and service.id == page.id %}active{% endif %}
+        {% endif %}"
+       href="/{{ menu_city.slug }}/{{ service.slug }}/">
+
+        {{ service.title }}
+
+    </a>
+
+    <!-- КНОПКА DROPDOWN -->
+    {% if service.children.exists %}
+    <button class="btn btn-sm dropdown-toggle border-0"
+            type="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false">
+
+    </button>
+
+    <ul class="dropdown-menu">
+
+        {% for child in service.children.all %}
+            {% if child.is_published and child.show_in_menu %}
+
+                <li>
+                    <a class="dropdown-item"
+                       href="{{ child.get_absolute_url }}">
+
+                        {{ child.title }}
+
+                    </a>
+                </li>
+
+            {% endif %}
+        {% endfor %}
+
+    </ul>
+    {% endif %}
+
+</div>
+
+
+
+                {% endfor %}
                 {% endif %}
 
                 {% if menu_city %}
-                    <a href="/{{ menu_city.slug }}/lead/" class="btn btn-primary btn-sm">
+
+                    <button class="btn btn-primary btn-sm"
+                            data-bs-toggle="modal"
+                            data-bs-target="#leadModal">
                         Оставить заявку
-                    </a>
+                    </button>
                 {% endif %}
 
             </div>
@@ -133,7 +272,7 @@
     </nav>
 </header>
 
-<main class="container my-4 my-lg-5">
+<main class="container my-3 my-lg-3">
     {% block content %}{% endblock %}
 </main>
 
@@ -147,12 +286,34 @@
 
 <!-- MOBILE CTA -->
 <div class="mobile-cta d-lg-none">
-    <a href="/{{ city.slug }}/lead/" class="btn btn-primary w-100">
-        Оставить заявку
-    </a>
+
+<button class="mobile-cta d-lg-none"
+        data-bs-toggle="modal"
+        data-bs-target="#leadModal">
+    Оставить заявку
+</button>
+
 </div>
 
 
 
+<div class="floating-cta">
+
+    <button class="btn btn-primary"
+            data-bs-toggle="modal"
+            data-bs-target="#leadModal">
+
+        ✉
+
+    </button>
+
+</div>
+
+
+{% include 'components/lead_modal.html' %}
+<script src="{% static 'js/phone-mask.js' %}"></script>
+<script src="{% static 'js/lead.js' %}"></script>
+<script src="{% static 'js/ui.js' %}"></script>
+<script src="{% static 'js/city-modal.js' %}"></script>
 </body>
 </html>
