@@ -47,12 +47,12 @@
 
                             {% for c in group.list %}
 
-                            <a href="/{{ c.slug }}/"
-                               class="text-decoration-none city-item">
+<a href="{% if c.is_main %}/{% else %}/{{ c.slug }}/{% endif %}"
+   class="text-decoration-none city-item">
 
-                                {{ c.name }}
+    {{ c.name }}
 
-                            </a>
+</a>
 
                             {% endfor %}
 

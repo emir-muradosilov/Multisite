@@ -92,19 +92,9 @@ class ServiceTemplatePrice(models.Model):
 
 
 class ServicePage(models.Model):
-    city = models.ForeignKey(
-        City,
-        on_delete=models.CASCADE,
-        related_name='service_pages'
-    )
+    city = models.ForeignKey(City,on_delete=models.CASCADE,related_name='service_pages'    )
 
-    parent = models.ForeignKey(
-        'self',
-        on_delete=models.CASCADE,
-        null=True,
-        blank=True,
-        related_name='children'
-    )
+    parent = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='children')
 
     title = models.CharField(max_length=255)
     slug = models.SlugField(max_length=200, blank=False)
@@ -144,30 +134,28 @@ class ServicePage(models.Model):
     def __str__(self):
         return f"{self.title} - {self.city.name}"
     
+    
+    
     def get_absolute_url(self):
 
-        # DISTRICT PAGE
-        if self.district:
+        is_main_city = self.city.is_main
 
-            return (
-                f"/{self.city.slug}/"
-                f"{self.slug}/"
-            )
-
-        # CHILD PAGE
+        # дочерняя страница
         if self.parent:
 
-            return (
-                f"/{self.city.slug}/"
-                f"{self.parent.slug}/"
-                f"{self.slug}/"
-            )
+            if is_main_city:
+                return f"/{self.parent.slug}/{self.slug}/"
 
-        # PARENT PAGE
-        return (
-            f"/{self.city.slug}/"
-            f"{self.slug}/"
-        )
+            return f"/{self.city.slug}/{self.parent.slug}/{self.slug}/"
+
+        # родительская страница
+        if is_main_city:
+            return f"/{self.slug}/"
+
+        return f"/{self.city.slug}/{self.slug}/"
+    
+
+
 
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -245,6 +233,13 @@ class FAQ(models.Model):
     related_services = models.ManyToManyField(ServicePage, blank=True, related_name='related_faqs')
 
 
+    def get_absolute_url(self):
+
+        if self.city.is_main:
+            return f"/faq/{self.slug}/"
+
+        return f"/{self.city.slug}/faq/{self.slug}/"
+
     class Meta:
         constraints = [
             models.UniqueConstraint(fields=['city', 'slug'], name='unique_city_faq_slug')
@@ -259,6 +254,7 @@ class FAQTemplate(models.Model):
     question_template = models.CharField(max_length=255)
     answer_template = models.TextField()
     slug = models.SlugField(unique=True)
+    related_service_templates = models.ManyToManyField(ServiceTemplate,blank=True)
 
     def save(self, *args, **kwargs):
         if not self.slug:

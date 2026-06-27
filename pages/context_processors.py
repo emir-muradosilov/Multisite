@@ -10,10 +10,16 @@ def seo_context(request):
 
     if len(path_parts) >= 1 and path_parts[0]:
 
-        city_slug = path_parts[0]
+        city = City.objects.filter(
+            slug=path_parts[0],
+            is_active=True
+        ).first()
+
+    # если URL без города (/)
+    if not city:
 
         city = City.objects.filter(
-            slug=city_slug,
+            is_main=True,
             is_active=True
         ).first()
 
@@ -37,3 +43,4 @@ def seo_context(request):
         'menu_city': city,
         'menu_services': menu_services,
     }
+

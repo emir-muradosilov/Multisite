@@ -31,31 +31,65 @@
 
 
 <section class="content-card p-4 p-lg-5 mb-4">
-    <h2 class="section-title">Услуги в {{ city.name }} с ценами</h2>
+
+    <h2 class="section-title">
+        Популярные услуги в {{ city.name }}
+    </h2>
+
     <div class="row g-3 mb-4">
-        {% for service_page in city.service_pages.all|slice:":6" %}
+
+        {% for service_page in main_services %}
+
         <div class="col-md-6 col-lg-4">
-            <a class="text-decoration-none" href="{{ service_page.get_absolute_url }}">
-                <div class="service-card">
+
+            <a href="{{ service_page.get_absolute_url }}"
+               class="text-decoration-none">
+
+                <div class="service-card h-100">
+
                     <div class="card-body">
-                        <h3 class="h5 mb-2 text-dark">{{ service_page.title }}</h3>
-                        <p class="mb-0 text-secondary">Подробные условия, цены и сроки по услуге.</p>
+
+                        <h3 class="h5 mb-2 text-dark">
+                            {{ service_page.title }}
+                        </h3>
+
+                        <p class="mb-0 text-secondary">
+                            Цены, сроки выполнения работ и консультация специалиста.
+                        </p>
+
                     </div>
+
                 </div>
+
             </a>
+
         </div>
+
         {% empty %}
+
         <div class="col-12">
-            <p class="mb-0 text-secondary">Список услуг будет добавлен в ближайшее время.</p>
+
+            <p class="mb-0 text-secondary">
+                Популярные услуги пока не настроены.
+            </p>
+
         </div>
+
         {% endfor %}
+
     </div>
-    <button class="btn btn-primary btn-sm"
+
+    <button
+        class="btn btn-primary btn-sm"
         data-bs-toggle="modal"
         data-bs-target="#leadModal">
-    Оставить заявку
-</button>
+
+        Оставить заявку
+
+    </button>
+
 </section>
+
 
 
 <!-- Выполняемые работы -->

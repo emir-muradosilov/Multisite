@@ -44,8 +44,10 @@ urlpatterns = [
     path('', include('tenants.urls')),
     
     path('', include('leads.urls')),
-    path('', include('cities.urls')),
+
     path('', include('pages.urls')),
+    path('', include('cities.urls')),
+
     path('sitemap.xml', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
     path('robots.txt', robots_txt, name='robots_txt'),
     

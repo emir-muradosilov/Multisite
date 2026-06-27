@@ -5,17 +5,28 @@ from django.utils import timezone
 from datetime import timedelta
 from pages.models import ServicePage
 from pages.services.page_quality import calculate_page_score
+from cities.forms import CityAdminForm
+
+from cities.forms import CityAdminForm
+
+from cities.services.copy_city_structure import (
+    copy_city_structure
+)
 
 
 @admin.register(City)
 class CityAdmin(admin.ModelAdmin):
+
+    form = CityAdminForm
+
     prepopulated_fields = {"slug": ("name",)}
     list_display = (
-        "name", "slug", "is_active", "is_rented", "tenant_name", "tenant_phone", "leads_count", 'rent_price', "rent_expire_date","seo_score","indexed_pages","noindex_pages","weak_pages",)
-    list_filter = ("is_active", "is_rented")
+        "name", "slug", "is_active", 'is_main', "is_rented", "tenant_name", "tenant_phone", "leads_count", 'rent_price', "rent_expire_date","seo_score","indexed_pages","noindex_pages","weak_pages",)
+    list_filter = ("is_active", "is_rented", 'is_main',)
     search_fields = ("name", "slug", "seo_title", "h1_title")
     fieldsets = (
         ("Основное", {"fields": ("name", "slug", 'name_where', 'name_oblast', 'name_oblast_where', "is_active", "is_rented")}),
+        ("Копирование", {"fields": ("copy_structure",)}),
         ("Контакты", {"fields": ("phone", "address", "price_text", "telegram_chat_id")}),
         ("SEO главной страницы города", {"fields": ("h1_title", "seo_title", "seo_description", "seo_keywords")}),
         ("Аренда", {"fields": ("rent_price", "rented_until")}),
@@ -140,7 +151,118 @@ class CityAdmin(admin.ModelAdmin):
             if score < 40:
                 weak += 1
         return weak
+    
     weak_pages.short_description = 'Weak'
+
+
+    def save_model(
+        self,
+        request,
+        obj,
+        form,
+        change
+    ):
+
+        is_new = obj.pk is None
+
+        super().save_model(
+            request,
+            obj,
+            form,
+            change
+        )
+
+        if (
+            is_new
+            and form.cleaned_data.get(
+                'copy_structure'
+            )
+        ):
+
+            source_city = City.objects.filter(
+                is_main=True,
+                is_active=True
+            ).first()
+
+            if (
+                source_city
+                and source_city.id != obj.id
+            ):
+
+                copy_city_structure(
+                    source_city=source_city,
+                    target_city=obj
+                )
+
+
+    def get_fieldsets(self, request, obj=None):
+
+        fieldsets = [
+            (
+                "Основное",
+                {
+                    "fields": (
+                        "name",
+                        "slug",
+                        "name_where",
+                        "name_oblast",
+                        "name_oblast_where",
+                        "is_active",
+                        "is_rented",
+                    )
+                },
+            ),
+        ]
+
+        if obj is None:
+            fieldsets.append(
+                (
+                    "Копирование",
+                    {
+                        "fields": (
+                            "copy_structure",
+                        )
+                    },
+                )
+            )
+
+        fieldsets.extend([
+            (
+                "Контакты",
+                {
+                    "fields": (
+                        "phone",
+                        "address",
+                        "price_text",
+                        "telegram_chat_id",
+                    )
+                },
+            ),
+            (
+                "SEO главной страницы города",
+                {
+                    "fields": (
+                        "h1_title",
+                        "seo_title",
+                        "seo_description",
+                        "seo_keywords",
+                    )
+                },
+            ),
+            (
+                "Аренда",
+                {
+                    "fields": (
+                        "rent_price",
+                        "rented_until",
+                    )
+                },
+            ),
+        ])
+
+        return fieldsets
+
+
 
 
 

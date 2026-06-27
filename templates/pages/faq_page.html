@@ -46,7 +46,7 @@
         <ol class="breadcrumb mb-0">
 
             <li class="breadcrumb-item">
-                <a href="/{{ city.slug }}/">
+                <a href="{% if city.is_main %}/{% else %}/{{ city.slug }}/{% endif %}">
                     {{ city.in_city }}
                 </a>
             </li>
@@ -127,7 +127,7 @@
 
         <div class="col-md-6">
 
-            <a href="/{{ city.slug }}/faq/{{ item.slug }}/"
+            <a href="{{ item.get_absolute_url }}"
                class="text-decoration-none">
 
                 <div class="border rounded-4 p-4 h-100 bg-light">
@@ -162,16 +162,16 @@
 
     <div class="d-flex flex-wrap gap-2">
 
-        {% for c in other_cities %}
+{% for c in other_cities %}
 
-            <a href="/{{ c.slug }}/faq/{{ faq.slug }}/"
-               class="btn btn-outline-secondary btn-sm">
+<a href="{% if c.is_main %}/faq/{{ faq.slug }}/{% else %}/{{ c.slug }}/faq/{{ faq.slug }}/{% endif %}"
+   class="btn btn-outline-secondary btn-sm">
 
-                FAQ — {{ c.name }}
+    FAQ — {{ c.name }}
 
-            </a>
+</a>
 
-        {% endfor %}
+{% endfor %}
 
     </div>
 

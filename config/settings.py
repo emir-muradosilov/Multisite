@@ -112,7 +112,7 @@ TEMPLATES = [
 #                'seo.views.seo_context',
                 'core.context_processors.menu_services',
                 'core.context_processors.global_cities',
-#                'pages.context_processors.seo_context',
+                'pages.context_processors.seo_context',
                 'cities.context_processors.all_cities',
 #                'settings_site.context_processors.site_settings',
                 'core.context_processors.site_settings',
@@ -189,9 +189,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/6.0/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'ru-ru'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/Moscow'
 
 USE_I18N = True
 

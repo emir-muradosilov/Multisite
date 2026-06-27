@@ -6,18 +6,25 @@ from django.contrib.auth.decorators import login_required
 # Create your views here.
 from pages.models import ServicePage
 from pages.services.page_quality import calculate_page_score
-
+from django.shortcuts import redirect
 
 
 def city_home(request, city_slug):
     city = get_object_or_404(City, slug = city_slug)
+    if city.is_main:
+        return redirect('/', permanent=True)
+    
+    main_services = ServicePage.objects.filter(city=city, is_published=True, template__is_main=True, parent__isnull=True).select_related('template')[:6]
+
+
     form = LeadForm
     canonical_url = request.build_absolute_uri(request.path)
 
     return render(request, 'cities/city_home.html', {
         'city': city,
         'form': form,
-        'canonical_url':canonical_url
+        'canonical_url':canonical_url,
+        'main_services': main_services,
 
     })
 

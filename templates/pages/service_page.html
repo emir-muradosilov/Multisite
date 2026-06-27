@@ -136,7 +136,7 @@
         {% for child in children|slice:":3" %}
         <div class="col-md-6 col-lg-4">
 
-            <a href="/{{ city.slug }}/{{ parent.slug }}/{{ child.slug }}/"
+            <a href="{{ child.get_absolute_url }}"
                class="text-decoration-none">
 
                 <div class="border rounded-4 p-4 h-100 bg-light">
@@ -230,20 +230,16 @@
 <!-- PRICE -->
 {% include 'components/price.html' %}
 
+<!--
 <section class="content-card p-4 p-lg-5 mb-4">
-
     <h2 class="section-title mb-4">
         Стоимость работ
     </h2>
-
     <div class="alert alert-light border mb-0">
-
         {{ city_data.price_range|default:"Цена рассчитывается индивидуально" }}
-
     </div>
-
 </section>
-
+-->
 
 {% include 'components/lead_form_gorizont.html' %}
 

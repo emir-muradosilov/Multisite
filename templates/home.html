@@ -31,6 +31,32 @@
 
 
 
+<section class="content-card p-4 p-lg-5 mb-4">
+    <h2 class="section-title">
+        Популярные услуги
+    </h2>
+    <div class="row g-3">
+        {% for service in popular_services %}
+        <div class="col-md-6 col-lg-4">
+            <a href="{{ service.get_absolute_url }}"
+               class="text-decoration-none">
+                <div class="service-card h-100">
+                    <div class="card-body">
+                        <h3 class="h5 text-dark">
+                            {{ service.title }}
+                        </h3>
+                        <p class="text-secondary mb-0">
+                            Подробнее об услуге, ценах и сроках выполнения работ.
+                        </p>
+                    </div>
+                </div>
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
+
 
 <!-- О компании -->
 
@@ -296,18 +322,34 @@
 
     <div class="d-flex flex-wrap gap-2">
 
-        {% for city in cities %}
+{% for city in cities %}
 
-            <a href="/{{ city.slug }}/"
-               class="btn btn-outline-secondary btn-sm">
-                {{ city.name  }}
+    <a href="{% if city.is_main %}/{% else %}/{{ city.slug }}/{% endif %}"
+       class="btn btn-outline-secondary btn-sm">
+        {{ city.name }}
+    </a>
 
-            </a>
-
-        {% endfor %}
+{% endfor %}
 
     </div>
 
 </section>
 
+
+
+
+
+
+
+
+
+
+
+
+
+
 {% endblock %}
+
+
+
+

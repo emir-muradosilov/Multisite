@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 from cities.models import City
+from django.http import Http404
 
 from .models import (
     ServicePage,
@@ -22,6 +23,8 @@ from pages.services.contacts import get_city_contacts
 from pages.services.indexing import get_indexing_data
 
 from core.models import SiteSettings
+from cities.views import city_home
+
 
 # =====================================================
 # SERVICE PAGE
@@ -29,15 +32,26 @@ from core.models import SiteSettings
 
 def service_page(
     request,
-    city_slug,
     service_slug,
+    city_slug=None,
     page_slug=None
 ):
 
-    city = get_object_or_404(
-        City,
-        slug=city_slug
-    )
+    if city_slug:
+
+        city = get_object_or_404(
+            City,
+            slug=city_slug,
+            is_active=True
+        )
+
+    else:
+
+        city = get_object_or_404(
+            City,
+            is_main=True,
+            is_active=True
+        )
 
     # =====================================================
     # PAGE
@@ -289,7 +303,11 @@ def faq_page(
 ):
 
     faq = get_object_or_404(
-        FAQ.objects.select_related('city'),
+        FAQ.objects.select_related(
+            'city'
+        ).prefetch_related(
+            'related_services'
+        ),
         city__slug=city_slug,
         slug=faq_slug
     )
@@ -355,29 +373,45 @@ def faq_page(
 
 def home(request):
 
+    main_city = City.objects.filter(
+        is_main=True,
+        is_active=True
+    ).first()
+
+    if not main_city:
+        raise Http404(
+            'Главный город не назначен'
+        )
+
     cities = City.objects.filter(
         is_active=True
+    ).exclude(
+        id=main_city.id
     ).order_by(
         'name'
     )[:50]
 
+
     popular_services = ServicePage.objects.filter(
+        city=main_city,
         is_published=True,
         parent__isnull=True,
-        is_main=True
-    ).select_related(
-        'city'
-    ).order_by(
-        'sort_order'
-    )[:12]
+        template__is_main=True
+        ).select_related(
+            'template'
+        ).order_by(
+            'sort_order'
+        )[:12]
 
     portfolio_cases = PortfolioCase.objects.filter(
+        city=main_city,
         is_published=True
-    )
-    portfolio_cases = portfolio_cases[:3]
+    )[:3]
 
-    reviews = Review.objects.filter(is_published=True)
-    service_reviews = reviews[:4]
+    reviews = Review.objects.filter(
+        city=main_city,
+        is_published=True
+    )[:4]
 
     faqs = GlobalFAQ.objects.filter(is_published=True)
 
@@ -386,11 +420,13 @@ def home(request):
         request,
         'home.html',
         {
+            'city': main_city,
+            'main_city': main_city,
             'cities': cities,
             'popular_services': popular_services,
-            'reviews':reviews,
-            'portfolio_cases':portfolio_cases,
-            'faqs':faqs,
+            'portfolio_cases': portfolio_cases,
+            'reviews': reviews,
+            'faqs': faqs,
         }
     )
 
@@ -488,4 +524,23 @@ def district_service_page(
     )
 
 
+
+def city_or_service(request, slug):
+
+    city = City.objects.filter(
+        slug=slug,
+        is_active=True,
+        is_main=False
+    ).first()
+
+    if city:
+        return city_home(
+            request,
+            city_slug=city.slug
+        )
+
+    return service_page(
+        request,
+        service_slug=slug
+    )
 

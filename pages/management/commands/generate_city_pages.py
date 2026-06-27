@@ -113,39 +113,66 @@ class Command(BaseCommand):
         if exists:
             return None
 
-        title = template.title_template.format(
-            city=city.name
+        # =====================================
+        # ЗАМЕНА ПЕРЕМЕННЫХ
+        # =====================================
+
+        def render_text(text):
+
+            if not text:
+                return ''
+
+            return (
+                text
+                .replace('{{ city.name }}', city.name)
+                .replace('{{ city.in_city }}', city.in_city)
+                .replace('{{ city.oblast }}', city.oblast)
+                .replace('{{ city.in_oblast }}', city.in_oblast)
+            )
+
+        title = render_text(
+            template.title_template
         )
 
-        h1 = template.h1_template.format(
-            city=city.name
+        h1 = render_text(
+            template.h1_template
         )
 
-        seo_title = template.seo_title_template.format(
-            city=city.name
+        seo_title = render_text(
+            template.seo_title_template
         )
 
-        seo_description = template.seo_description_template.format(
-            city=city.name
+        seo_description = render_text(
+            template.seo_description_template
         )
 
-        seo_keywords = template.seo_keywords_template.format(
-            city=city.name
+        seo_keywords = render_text(
+            template.seo_keywords_template
         )
 
-        city_data = CityData.objects.filter(city=city.first())
-        
-        content = spin_text(template.content_template).format(
-            city=city.name,
-            districts=city_data.districts if city_data else '',
-            industrial_zones=city_data.industrial_zones if city_data else '',
-            typical_concrete=city_data.typical_concrete if city_data else '',
-            typical_thickness=city_data.typical_thickness if city_data else '',
-            price_range=city_data.price_range if city_data else '',
+        city_data = CityData.objects.filter(
+            city=city
+        ).first()
+
+        content = render_text(
+            spin_text(
+                template.content_template
+            )
         )
+
+        if city_data:
+
+            content = content.format(
+                districts=city_data.districts or '',
+                industrial_zones=city_data.industrial_zones or '',
+                typical_concrete=city_data.typical_concrete or '',
+                typical_thickness=city_data.typical_thickness or '',
+                price_range=city_data.price_range or '',
+            )
 
         page = ServicePage.objects.create(
             city=city,
+            template=template,
             parent=parent,
             title=title,
             slug=template.slug,
@@ -182,12 +209,27 @@ class Command(BaseCommand):
         if exists:
             return None
 
-        question = template.question_template.format(
-            city=city.name
+        def render_text(text):
+
+            if not text:
+                return ''
+            
+            return (
+                text
+                .replace('{{ city.name }}', city.name)
+                .replace('{{ city.in_city }}', city.in_city)
+                .replace('{{ city.oblast }}', city.oblast)
+                .replace('{{ city.in_oblast }}', city.in_oblast)
+            )
+
+        question = render_text(
+            template.question_template
         )
 
-        answer = spin_text(template.answer_template).format(
-            city=city.name
+        answer = render_text(
+            spin_text(
+                template.answer_template
+            )
         )
 
         faq = FAQ.objects.create(
@@ -199,6 +241,21 @@ class Command(BaseCommand):
             seo_description=answer[:160],
             seo_keywords=f"{question}, {city.name}",
         )
+
+        # =====================================
+        # СВЯЗЫВАЕМ FAQ С УСЛУГАМИ
+        # =====================================
+
+        for service_template in template.related_service_templates.all():
+
+            service_page = ServicePage.objects.filter(
+                city=city,
+                template=service_template,
+                is_published=True
+            ).first()
+
+            if service_page:
+                faq.related_services.add(service_page)
 
         self.stdout.write(
             self.style.SUCCESS(

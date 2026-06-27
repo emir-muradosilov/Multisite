@@ -179,16 +179,9 @@ def create_lead(request, city_slug=None):
                 None
             )
 
-            if (
-                tenant
-                and tenant.is_active
-                and tenant.telegram_chat_id
-            ):
+#            if (tenant and tenant.is_active and tenant.telegram_chat_id):
 
-                send_telegram_message(
-                    message,
-                    tenant.telegram_chat_id
-                )
+#                send_telegram_message( message, tenant.telegram_chat_id )
 
             return JsonResponse({
                 'success': True

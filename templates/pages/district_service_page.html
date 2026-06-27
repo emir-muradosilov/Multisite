@@ -29,7 +29,7 @@
         <ol class="breadcrumb">
 
             <li class="breadcrumb-item">
-                <a href="/{{ city.slug }}/">
+                <a href="{% if city.is_main %}/{% else %}/{{ city.slug }}/{% endif %}">
                     {{ city.in_city }}
                 </a>
             </li>

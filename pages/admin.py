@@ -3,6 +3,7 @@ from django.utils.html import format_html
 
 from .models import ServicePage, FAQ, CityData, ServiceTemplate, SEOBlock, PortfolioCase, Review, DistrictPageTemplate, ServiceTemplatePrice, GlobalFAQ
 
+from cities.models import City
 
 @admin.register(CityData)
 class CityDataAdmin(admin.ModelAdmin):
@@ -27,58 +28,138 @@ class ServicePriceInline(admin.TabularInline):
 
 @admin.register(ServicePage)
 class ServicePageAdmin(admin.ModelAdmin):
-    list_display = ('title', 'city', 'parent', 'is_published', 'show_in_menu', 'no_index', 'created_at', 'view_link')
-    list_filter = ('city', 'is_published','show_in_menu','no_index',)
-    search_fields = ('title', 'slug', 'content', 'seo_title',)
 
-    
-    prepopulated_fields = {"slug": ("title",)}
-    autocomplete_fields = ('city', 'parent')
-
-    inlines = [ChildPageInline]
-
-    fieldsets = (
-        ('Основное', {
-            'fields': (
-                'city',
-                'parent',
-                'title',
-                'slug',
-            )
-        }),
-
-        ('Контент', {
-            'fields': (
-                'content',
-            )
-        }),
-
-        ('SEO', {
-            'fields': (
-                'seo_title',
-                'seo_description',
-                'seo_keywords',
-            )
-        }),
-
-        ('Настройки', {
-            'fields': (
-                'is_published',
-                'show_in_menu',
-                'no_index',
-            )
-        }),
+    list_display = (
+        'title',
+        'parent',
+        'is_published',
+        'show_in_menu',
+        'no_index',
+        'created_at',
+        'view_link',
+        'sort_order',
     )
 
-    ordering = ('city', 'parent', 'title')
+    list_editable = (
+        'is_published',
+        'show_in_menu',
+        'sort_order',
+        
+    )
+
+    search_fields = (
+        'title',
+        'slug',
+        'content',
+        'seo_title',
+    )
+
+    prepopulated_fields = {
+        "slug": ("title",)
+    }
+
+    autocomplete_fields = (
+        'city',
+        'parent',
+    )
+
+    inlines = [
+        ChildPageInline
+    ]
+
+    fieldsets = (
+        (
+            'Основное',
+            {
+                'fields': (
+                    'city',
+                    'parent',
+                    'title',
+                    'slug',
+                )
+            }
+        ),
+
+        (
+            'Контент',
+            {
+                'fields': (
+                    'content',
+                )
+            }
+        ),
+
+        (
+            'SEO',
+            {
+                'fields': (
+                    'seo_title',
+                    'seo_description',
+                    'seo_keywords',
+                )
+            }
+        ),
+
+        (
+            'Настройки',
+            {
+                'fields': (
+                    'is_published',
+                    'show_in_menu',
+                    'no_index',
+                )
+            }
+        ),
+    )
+
+    ordering = (
+        'parent',
+        'title',
+    )
+
+    def get_queryset(self, request):
+
+        qs = super().get_queryset(request)
+
+        return qs.filter(
+            city__is_main=True
+        )
+
+    def formfield_for_foreignkey(
+        self,
+        db_field,
+        request,
+        **kwargs
+    ):
+
+        if db_field.name == 'city':
+
+            kwargs["queryset"] = (
+                City.objects.filter(
+                    is_main=True
+                )
+            )
+
+        elif db_field.name == 'parent':
+
+            kwargs["queryset"] = (
+                ServicePage.objects.filter(
+                    city__is_main=True
+                )
+            )
+
+        return super().formfield_for_foreignkey(
+            db_field,
+            request,
+            **kwargs
+        )
 
     def view_link(self, obj):
-        if obj.parent:
-            url = f"/{obj.city.slug}/{obj.parent.slug}/{obj.slug}/"
-        else:
-            url = f"/{obj.city.slug}/{obj.slug}/"
 
-        return format_html('<a href="{}" target="_blank">Открыть</a>', url)
+        return format_html(
+            '<a href="{}" target="_blank">Открыть</a>',
+            obj.get_absolute_url()
+        )
 
     view_link.short_description = "Страница"
 
@@ -94,15 +175,25 @@ class FAQAdmin(admin.ModelAdmin):
     filter_horizontal = ('related_services',)
 
     fieldsets = (
-    ('SEO', {
-        'fields': (
-            'seo_title',
-            'seo_description',
-            'seo_keywords',
-            'h1_title',
-        )
-    }),
-)
+        ('Основная информация', {
+            'fields': (
+                'city', 
+                'question', 
+                'slug', 
+                'answer', 
+                'is_published', 
+                'related_services'
+            )
+        }),
+        ('SEO', {
+            'fields': (
+                'seo_title',
+                'seo_description',
+                'seo_keywords',
+                'h1_title',
+            )
+        }),
+    )
 
     def view_link(self, obj):
         url = f"/{obj.city.slug}/faq/{obj.slug}/"

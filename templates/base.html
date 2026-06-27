@@ -142,134 +142,145 @@
 <header class="site-header">
 
 
-    
-    <nav class="navbar">
-        <div class="container py-2 d-flex align-items-center">
+<nav class="site-nav">
 
-            <a class="navbar-brand d-flex align-items-center gap-2 flex-shrink-0" href="/">
+    <!-- СТРОКА 1 -->
 
-    {% if site_settings.logo %}
-<img src="{{ site_settings.logo.url }}"
-     alt="{{ site_settings.site_name }}"
-     class="site-logo">
-    {% endif %}
+    <div class="container">
 
-    <span>
-        {{ site_settings.site_name }}
-    </span>
+        <div class="header-top">
 
-</a>
+            <div class="header-left">
 
-{% if city %}
-<button class="btn btn-outline-secondary btn-sm ms-3"
-        data-bs-toggle="modal"
-        data-bs-target="#cityModal">
+                <a class="navbar-brand d-flex align-items-center gap-2" href="/">
 
-    📍 {{ city.name }}
+                    {% if site_settings.logo %}
+                    <img src="{{ site_settings.logo.url }}"
+                         alt="{{ site_settings.site_name }}"
+                         class="site-logo">
+                    {% endif %}
 
-</button>
-{% else %}
-<button class="btn btn-outline-secondary btn-sm ms-3"
-        data-bs-toggle="modal"
-        data-bs-target="#cityModal">
+                    <span>
+                        {{ site_settings.site_name }}
+                    </span>
 
-    📍 Выберите город
+                </a>
 
-</button>
-{% endif %}
-            
-            <div class="ms-auto d-flex align-items-center gap-3">
+                {% if city %}
+                <button class="btn btn-outline-secondary btn-sm"
+                        data-bs-toggle="modal"
+                        data-bs-target="#cityModal">
 
-                {% if menu_services %}
-                    {% for service in menu_services %}
+                    📍 {{ city.name }}
 
-<!-- ✅ КЛИКАБЕЛЬНАЯ СТРАНИЦА -->
+                </button>
+                {% else %}
+                <button class="btn btn-outline-secondary btn-sm"
+                        data-bs-toggle="modal"
+                        data-bs-target="#cityModal">
 
+                    📍 Выберите город
 
-<!--
-                        <div class="dropdown">
-                            <a class="nav-link"
-                               href="/{{ menu_city.slug }}/{{ service.slug }}/">
-                                {{ service.title }}
-                            </a>
-                            {% if service.children.exists %}
-                            <div class="dropdown-menu">
-                                {% for child in service.children.all %}
-                                    {% if child.is_published and child.show_in_menu %}
-                                        <a class="dropdown-item"
-                                           href="/{{ menu_city.slug }}/{{ service.slug }}/{{ child.slug }}/">
-                                            {{ child.title }}
-                                        </a>
-                                    {% endif %}
-                                {% endfor %}
-                            </div>
-                            {% endif %}
-                        </div>
--->
-
-<div class="dropdown d-flex align-items-center">
-
-    <!-- КЛИКАБЕЛЬНАЯ СТРАНИЦА -->
-    <a class="nav-link {% if page and page.parent %}
-            {% if service.id == page.parent.id %}active{% endif %}
-        {% else %}
-            {% if page and service.id == page.id %}active{% endif %}
-        {% endif %}"
-       href="/{{ menu_city.slug }}/{{ service.slug }}/">
-
-        {{ service.title }}
-
-    </a>
-
-    <!-- КНОПКА DROPDOWN -->
-    {% if service.children.exists %}
-    <button class="btn btn-sm dropdown-toggle border-0"
-            type="button"
-            data-bs-toggle="dropdown"
-            aria-expanded="false">
-
-    </button>
-
-    <ul class="dropdown-menu">
-
-        {% for child in service.children.all %}
-            {% if child.is_published and child.show_in_menu %}
-
-                <li>
-                    <a class="dropdown-item"
-                       href="{{ child.get_absolute_url }}">
-
-                        {{ child.title }}
-
-                    </a>
-                </li>
-
-            {% endif %}
-        {% endfor %}
-
-    </ul>
-    {% endif %}
-
-</div>
-
-
-
-                {% endfor %}
-                {% endif %}
-
-                {% if menu_city %}
-
-                    <button class="btn btn-primary btn-sm"
-                            data-bs-toggle="modal"
-                            data-bs-target="#leadModal">
-                        Оставить заявку
-                    </button>
+                </button>
                 {% endif %}
 
             </div>
 
+<button class="btn btn-outline-secondary d-lg-none"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#mainNavbar">
+
+    ☰ Меню
+
+</button>
+
         </div>
-    </nav>
+
+    </div>
+
+    <!-- СТРОКА 2 -->
+
+    <div class="border-top">
+
+        <div class="container">
+
+<div class="collapse navbar-collapse" id="mainNavbar">
+
+                <div class="header-menu">
+
+                    <div class="header-services">
+
+                        {% for service in menu_services %}
+
+                        <div class="dropdown d-flex align-items-center">
+
+                            <a class="nav-link"
+                               href="{{ service.get_absolute_url }}">
+
+                                {{ service.title }}
+
+                            </a>
+
+                            {% if service.children.exists %}
+
+                            <button class="btn btn-sm dropdown-toggle border-0"
+                                    type="button"
+                                    data-bs-toggle="dropdown">
+                            </button>
+
+                            <ul class="dropdown-menu">
+
+                                {% for child in service.children.all %}
+                                {% if child.is_published and child.show_in_menu %}
+
+                                <li>
+
+                                    <a class="dropdown-item"
+                                       href="{{ child.get_absolute_url }}">
+
+                                        {{ child.title }}
+
+                                    </a>
+
+                                </li>
+
+                                {% endif %}
+                                {% endfor %}
+
+                            </ul>
+
+                            {% endif %}
+
+                        </div>
+
+                        {% endfor %}
+
+                    </div>
+
+                    <div class="header-cta">
+
+                        <button class="btn btn-primary"
+                                data-bs-toggle="modal"
+                                data-bs-target="#leadModal">
+
+                            Оставить заявку
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</nav>
+    
+
 </header>
 
 <main class="container my-3 my-lg-3">

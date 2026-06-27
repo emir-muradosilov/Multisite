@@ -110,7 +110,7 @@ class FAQSitemap(Sitemap):
         ).select_related("city")
 
     def location(self, obj):
-        return f"/{obj.city.slug}/faq/{obj.slug}/"
+        return obj.get_absolute_url()
 
 
 class StaticSitemap(Sitemap):

@@ -8,7 +8,7 @@
       "@type": "ListItem",
       "position": 1,
       "name": "{{ city.name }}",
-      "item": "{{ request.scheme }}://{{ request.get_host }}/{{ city.slug }}/"
+      "item": "{{ request.scheme }}://{{ request.get_host }}{% if city.is_main %}/{% else %}/{{ city.slug }}/{% endif %}"
     }
 
     {% if parent and parent != page %}
@@ -17,7 +17,7 @@
       "@type": "ListItem",
       "position": 2,
       "name": "{{ parent.title }}",
-      "item": "{{ request.scheme }}://{{ request.get_host }}/{{ city.slug }}/{{ parent.slug }}/"
+      "item": "{{ request.scheme }}://{{ request.get_host }}{{ parent.get_absolute_url }}"
     }
     {% endif %}
 

@@ -1,17 +1,50 @@
-<section class="content-card p-4 p-lg-5 mb-4">
-    <h2 class="section-title">Получить расчет стоимости</h2>
-    <form method="post" action="/{{ city.slug }}/lead/">
+<section class="content-card p-4 p-lg-5 mb-4 lead-form-wrapper">
+    <h2 class="section-title">
+        Получить расчет стоимости
+    </h2>
+
+    <form class="lead-form" method="post">
         {% csrf_token %}
+        <input type="hidden" name="city" value="{{ city.id }}">
+
         <div class="row g-3">
             <div class="col-md-6">
-                <input type="text" name="name" class="form-control form-control-lg" placeholder="Ваше имя" required>
+                <input type="text"
+                       name="name"
+                       class="form-control form-control-lg"
+                       placeholder="Ваше имя"
+                       required>
             </div>
+
             <div class="col-md-6">
-                <input type="text" name="phone" class="form-control form-control-lg" placeholder="Телефон" required>
+                <input type="tel"
+                       name="phone"
+                       class="form-control form-control-lg phone-input"
+                       placeholder="Телефон"
+                       required>
             </div>
+
             <div class="col-12">
-                <button class="btn btn-success btn-lg w-100">Отправить заявку</button>
+                <div class="form-check mb-3">
+                    <input class="form-check-input policy-check" type="checkbox" name="policy_accept" required>
+                    <label class="form-check-label small text-secondary">
+                        Я даю согласие на обработку персональных данных и соглашаюсь
+                        с условиями
+                        <a href="/privacy-policy/" target="_blank" class="text-decoration-none">политики конфиденциальности</a>
+                        и
+                        <a href="/oferta/" target="_blank" class="text-decoration-none">договора оферты</a>
+                    </label>
+                </div>
+                <button type="submit" class="btn btn-success btn-lg w-100 submit-btn">
+                    Отправить заявку
+                </button>
             </div>
         </div>
     </form>
+
+    <div class="lead-success d-none text-center py-3">
+        <i class="bi bi-check-circle-fill text-success fs-1 mb-2"></i>
+        <h5>Заявка отправлена!</h5>
+        <p class="mb-0 text-secondary">Мы свяжемся с вами в ближайшее время.</p>
+    </div>
 </section>
