@@ -110,17 +110,24 @@ def tenant_settings(request):
     if request.user.role != 'tenant':
         return HttpResponseForbidden("Нет доступа")
 
-    city = request.user.city
+    city_name = request.user.city
+#    profile = request.user.tenant_profile
+    profile = request.user.city.tenant_profile
 
     if request.method == 'POST':
-        form = CityContactForm(request.POST, instance=city)
+#        form = CityContactForm(request.POST, instance=city)
+        form = CityContactForm(request.POST, instance=profile)
+
         if form.is_valid():
+            print(form.data)
             form.save()
     else:
-        form = CityContactForm(instance=city)
+#        form = CityContactForm(instance=city)
+        form = CityContactForm(instance=profile)
 
     return render(request, 'tenants/settings.html', {
-        'city': city,
+        'city_name':city_name,
+        'city': profile,
         'form': form
     })
 

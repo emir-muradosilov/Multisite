@@ -513,3 +513,28 @@ hr {
     }
 
 }
+
+
+.header-secondary{
+
+    display:flex;
+    gap:28px;
+
+    padding:12px 0;
+
+    border-top:1px solid #ececec;
+}
+
+.header-secondary a{
+
+    color:#333;
+
+    text-decoration:none;
+
+    font-weight:500;
+}
+
+.header-secondary a:hover{
+
+    color:#0d6efd;
+}

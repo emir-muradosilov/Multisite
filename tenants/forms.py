@@ -13,7 +13,7 @@ class CityContactForm(forms.ModelForm):
             'email',
             'telegram',
             'whatsapp',
-            'website',
+            'max',
             'address',
             'working_hours',
         ]
@@ -25,7 +25,7 @@ class CityContactForm(forms.ModelForm):
             'email': 'Email',
             'telegram': 'Telegram',
             'whatsapp': 'WhatsApp',
-            'website': 'Сайт',
+            'max': 'Max',
             'address': 'Адрес',
             'working_hours': 'Режим работы',
         }
@@ -36,8 +36,44 @@ class CityContactForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
 
         for field in self.fields.values():
-
             field.widget.attrs.update({
                 'class': 'form-control'
             })
 
+        self.fields['phone'].widget.attrs.update({
+            'placeholder': '+7 (___) ___-__-__',
+            'data-mask': 'phone'
+        })
+
+        self.fields['phone_secondary'].widget.attrs.update({
+            'placeholder': '+7 (___) ___-__-__',
+            'data-mask': 'phone'
+        })
+
+        self.fields['telegram'].widget.attrs.update({
+            'placeholder': 'Your_nickname',
+            'inputmode': 'str',
+        })
+
+        self.fields['whatsapp'].widget.attrs.update({
+            'placeholder': '79780511856',
+            'inputmode': 'numeric',
+            'data-mask': 'digits'
+        })
+
+        self.fields['max'].widget.attrs.update({
+            'placeholder': '79780511856',
+            'inputmode': 'numeric',
+            'data-mask': 'digits'
+        })
+
+        self.fields['working_hours'].widget.attrs.update({
+            'placeholder': 'Пн-Пт, с 10:30 до 19:00',
+            'inputmode': 'str',
+
+        })
+        self.fields['address'].widget.attrs.update({
+            'placeholder': 'Москва, ул. Пушкина д. 12',
+            'inputmode': 'str',
+
+        })

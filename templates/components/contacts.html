@@ -1,38 +1,98 @@
-
 <section class="content-card p-4 p-lg-5">
 
-    <h2 class="section-title">
+    <h2 class="section-title mb-4">
         Контакты
     </h2>
-    <p>
-                <div itemscope itemtype="http://schema.org">
-                <strong>Телефон:</strong>
-                <a href="tel:{{ contacts.phone|default:'+79780761562' }}" class="link" itemprop="telephone">тел. {{ contacts.phone|default:'+7 978 076 15 62' }}</a>
-                </div>
-    </p>
-    {% if contacts.phone_secondary %}
-    <p>
-        <strong>Доп. телефон:</strong>
-        {{ contacts.phone_secondary }}
-    </p>
-    {% endif %}
-    <p>
-        <strong>Адрес:</strong>
-        г. {{ contacts.address|default:"Москва, работаем по всему городу и области" }}
-    </p>
-    {% if contacts.working_hours %}
-    <p>
-        <strong>Режим работы:</strong>
-        {{ contacts.working_hours }}
-    </p>
-    {% else %}
-    <strong>Режим работы:</strong>
-    Пн-Пт, с 9:30 до 19:00
-    {% endif %}
-    {% if city.price_text %}
-    <p>
-        <strong>Цены:</strong>
-        {{ city.price_text }}
-    </p>
-    {% endif %}
+
+    
+    <div itemscope itemtype="http://schema.org/LocalBusiness">
+
+        {% if contacts.phone %}
+        <div class="mb-3">
+            <div class="text-muted small mb-1">
+                Телефон
+            </div>
+            <a href="tel:{{ contacts.phone }}"
+               class="text-dark text-decoration-none fw-bold fs-4"
+               itemprop="telephone">
+                {{ contacts.phone }}
+            </a>
+        </div>
+        {% endif %}
+
+        
+
+        {% if contacts.phone_secondary %}
+        <div class="mb-3">
+            <div class="text-muted small mb-1">
+                Дополнительный телефон
+            </div>
+            <a href="tel:{{ contacts.phone_secondary }}"
+               class="text-dark text-decoration-none">
+                {{ contacts.phone_secondary }}
+            </a>
+        </div>
+        {% endif %}
+
+
+        {% if contacts.address %}
+        <div class="mb-3">
+            <div class="text-muted small">
+                Адрес
+            </div>
+            <div>
+                <i class="bi bi-geo-alt-fill text-danger me-1"></i>
+                {{ contacts.address }}
+            </div>
+        </div>
+        {% endif %}
+
+
+        {% if contacts.working_hours %}
+        <div class="mb-4">
+            <div class="text-muted small">
+                Режим работы
+            </div>
+            <div>
+                <i class="bi bi-clock-fill text-primary me-1"></i>
+                {{ contacts.working_hours }}
+            </div>
+
+        </div>
+        {% endif %}
+        {% if contacts.telegram or contacts.whatsapp or contacts.max %}
+        <div class="d-flex flex-wrap gap-2">
+            {% if contacts.telegram %}
+            <a href="https://t.me/{{ contacts.telegram }}"
+               class="btn btn-outline-primary"
+               target="_blank"
+               rel="noopener">
+                <i class="bi bi-telegram me-1"></i>
+                Telegram
+            </a>
+            {% endif %}
+            {% if contacts.whatsapp %}
+            <a href="https://wa.me/{{ contacts.whatsapp }}"
+               class="btn btn-outline-success"
+               target="_blank"
+               rel="noopener">
+                <i class="bi bi-whatsapp me-1"></i>
+                WhatsApp
+            </a>
+            {% endif %}
+
+            {% if contacts.max %}
+            <a href="https://max.ru/u/{{ contacts.max }}"
+               class="btn btn-outline-dark"
+               target="_blank"
+               rel="noopener">
+                <i class="bi bi-chat-dots me-1"></i>
+                Max
+            </a>
+            {% endif %}
+        </div>
+        {% endif %}
+
+    </div>
+
 </section>

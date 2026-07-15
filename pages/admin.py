@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.utils.html import format_html
 
 from .models import ServicePage, FAQ, CityData, ServiceTemplate, SEOBlock, PortfolioCase, Review, DistrictPageTemplate, ServiceTemplatePrice, GlobalFAQ
-
+from .models import TopMenuItem
 from cities.models import City
 
 @admin.register(CityData)
@@ -330,7 +330,24 @@ class GlobalFAQAdmin(admin.ModelAdmin):
 
 
 
+@admin.register(TopMenuItem)
+class TopMenuItemAdmin(admin.ModelAdmin):
 
+    list_display = (
+        "title",
+        "url",
+        "sort_order",
+        "is_active",
+    )
+
+    list_editable = (
+        "sort_order",
+        "is_active",
+    )
+
+    ordering = (
+        "sort_order",
+    )
 
 
 

@@ -312,20 +312,14 @@
         {% include 'components/seo_blocks.html' %}
     {% endif %}
 
-    <!-- FAQ -->
-    {% if section == 'faq' %}
-        {% include 'components/faq.html' %}
-    {% endif %}
-
-    <!-- Popular FAQ -->
-    {% if section == 'popular_faq' %}
-        {% include 'components/popular_faq.html' %}
-    {% endif %}
-
    
 
 
 {% endfor %}
+
+
+<!-- FAQ -->
+{% include 'components/faq.html' %}
 
 
 <!-- Random Последний position Блок -->
@@ -336,8 +330,6 @@
     {% include 'components/cta.html' %}
 
 
-<!-- Районы -->
-{% include 'components/district_pages.html' %}
 
 
 
@@ -353,29 +345,24 @@
 
 
 
-<!-- ПЕРЕЛИНКОВКА -->
-<section class="content-card p-4 p-lg-5">
+<!-- CITIES -->
+
+<section class="content-card p-4 p-lg-5 mb-4">
 
     <h2 class="section-title mb-4">
-        Работаем в других городах
+        Наши представители есть в городах:
     </h2>
 
     <div class="d-flex flex-wrap gap-2">
 
-        {% for c in other_cities|slice:":8" %}
+{% for city in other_cities %}
 
-            {% if c != city %}
+    <a href="{% if city.is_main %}/{% else %}/{{ city.slug }}/{% endif %}"
+       class="btn btn-outline-secondary btn-sm">
+        {{ city.name }}
+    </a>
 
-                <a href="/{{ c.slug }}/{{ parent.slug }}/"
-                   class="btn btn-outline-secondary btn-sm">
-
-                    {{ parent.title }} в {{ c.in_city  }}
-
-                </a>
-
-            {% endif %}
-
-        {% endfor %}
+{% endfor %}
 
     </div>
 

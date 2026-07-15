@@ -1,12 +1,12 @@
 <section class="content-card p-4 p-lg-5 mb-4">
 
     <h2 class="section-title mb-4">
-        Частые вопросы
+        Ваши Вопросы
     </h2>
 
     <div class="accordion" id="faqAccordion">
 
-        {% for faq_item in faqs|slice:":8" %}
+        {% for faq_item in city_faq|slice:":8" %}
         <div class="accordion-item">
 
             <h3 class="accordion-header">
@@ -31,7 +31,7 @@
                     {{ faq_item.answer|truncatechars:250 }}
 
                     <div class="mt-3">
-                        <a href="/{{ city.slug }}/faq/{{ faq_item.slug }}/">
+                        <a href="{{ faq_item.get_absolute_url }}">
                             Читать подробнее
                         </a>
                     </div>
@@ -90,7 +90,7 @@
   "@type": "FAQPage",
   "mainEntity": [
 
-    {% for faq_item in faqs|slice:":8" %}
+    {% for faq_item in city_faq|slice:":8" %}
     {
       "@type": "Question",
       "name": "{{ faq_item.question|escapejs }}",

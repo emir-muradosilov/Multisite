@@ -37,6 +37,20 @@ class City(models.Model):
     is_main = models.BooleanField(default=False,verbose_name='Главный город')
 
 
+    choose_as_h2 = models.TextField( blank=True)
+    choose_as = models.TextField( blank=True)
+
+    useful_h2 = models.TextField( blank=True)
+    useful = models.TextField( blank=True)
+
+    homepage_text_h2 = models.TextField( blank=True)
+    homepage_text = models.TextField( blank=True)
+
+    homepage_advantages_h2 = models.TextField( blank=True)
+    homepage_advantages = models.TextField( blank=True)
+
+
+
     def get_absolute_url(self):
 
         if self.is_main:

@@ -212,24 +212,20 @@ class FAQ(models.Model):
     city = models.ForeignKey(
         City,
         on_delete=models.CASCADE,
-        related_name='faqs'
+        related_name="faqs",
+        null=True,
+        blank=True,
     )
 
     question = models.CharField(max_length=255)
     slug = models.SlugField(max_length=200, blank=True)
-
     answer = models.TextField()
-
     seo_title = models.CharField(max_length=255, blank=True, null=True)
     seo_description = models.TextField(blank=True, null=True)
     seo_keywords = models.TextField(blank=True, null=True)
-
     created_at = models.DateTimeField(auto_now_add=True)
-
     is_published = models.BooleanField(default=True)
-    
     h1_title = models.CharField(max_length=255, blank=True, null=True)
-    
     related_services = models.ManyToManyField(ServicePage, blank=True, related_name='related_faqs')
 
 
@@ -533,5 +529,41 @@ class GlobalFAQ(models.Model):
 
 
 
+class TopMenuItem(models.Model):
+
+    title = models.CharField(
+        max_length=100,
+        verbose_name="Название"
+    )
+
+    url = models.CharField(
+        max_length=255,
+        verbose_name="URL"
+    )
+
+    sort_order = models.PositiveIntegerField(
+        default=0,
+        verbose_name="Порядок"
+    )
+
+    is_active = models.BooleanField(
+        default=True,
+        verbose_name="Показывать"
+    )
+
+    def get_absolute_url(self, city=None):
+
+        if city and not city.is_main:
+            return f"/{city.slug}/{self.url}/"
+
+        return f"/{self.url}/"
+
+    class Meta:
+        ordering = ["sort_order"]
+        verbose_name = "Верхнее меню"
+        verbose_name_plural = "Верхнее меню"
+
+    def __str__(self):
+        return self.title
 
 

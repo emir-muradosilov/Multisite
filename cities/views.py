@@ -7,6 +7,14 @@ from django.contrib.auth.decorators import login_required
 from pages.models import ServicePage
 from pages.services.page_quality import calculate_page_score
 from django.shortcuts import redirect
+from pages.services.contacts import get_city_contacts
+from pages.models import (
+    ServicePage,
+    FAQ,
+    PortfolioCase,
+    Review,
+    GlobalFAQ
+)
 
 
 def city_home(request, city_slug):
@@ -16,16 +24,30 @@ def city_home(request, city_slug):
     
     main_services = ServicePage.objects.filter(city=city, is_published=True, template__is_main=True, parent__isnull=True).select_related('template')[:6]
 
+    cities = City.objects.filter(is_active=True).exclude(id=city.id).order_by('name')[:50]
+    
+    contacts = get_city_contacts(city)
+
+    portfolio_cases = PortfolioCase.objects.filter(is_published=True)[:3]
+    reviews = Review.objects.filter(is_published=True)[:2]
+    faqs = GlobalFAQ.objects.filter(is_published=True)
+    popular_faqs = FAQ.objects.filter(is_published=True)
+
+
 
     form = LeadForm
     canonical_url = request.build_absolute_uri(request.path)
 
     return render(request, 'cities/city_home.html', {
         'city': city,
+        'cities':cities,
+        'contacts':contacts,
+        'portfolio_cases':portfolio_cases,
+        'reviews': reviews,
+        'faqs':popular_faqs,
         'form': form,
         'canonical_url':canonical_url,
         'main_services': main_services,
-
     })
 
 

@@ -11,7 +11,7 @@ from cities.models import City
 from .forms import LeadForm
 from .models import Lead
 
-from .services import send_telegram_message, is_duplicate_lead
+from .services import send_telegram_message, is_duplicate_lead, send_lead_email
 #from ratelimit.decorators import ratelimit
 from django_ratelimit.decorators import ratelimit
 #from ratelimit.decorators import ratelimit
@@ -142,6 +142,13 @@ def create_lead(request, city_slug=None):
                 })
 
             lead.save()
+
+
+            # =====================================================
+            # Send to email
+            # =====================================================
+
+            send_lead_email(lead)
 
             # =====================================================
             # TELEGRAM MESSAGE

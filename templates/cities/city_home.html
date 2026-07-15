@@ -21,7 +21,7 @@
 
 <!-- Главный баннер -->
 
-    {% include 'components/hero_city_home.html' %}
+{% include 'components/hero_city_home.html' %}
 
 
 
@@ -30,10 +30,27 @@
 {% include 'components/four_block.html' %}
 
 
+<!-- Выполняемые работы -->
+{% include 'components/Work_type_home.html' %}
+
+
+
 <section class="content-card p-4 p-lg-5 mb-4">
 
     <h2 class="section-title">
-        Популярные услуги в {{ city.name }}
+        {{ city.homepage_text_h2|safe }}
+    </h2>
+    <div class="row g-3">
+{{ city.homepage_text|safe }}
+</div>
+</section>
+
+
+
+<section class="content-card p-4 p-lg-5 mb-4">
+
+    <h2 class="section-title">
+        Популярные услуги в {{ city.in_city }}
     </h2>
 
     <div class="row g-3 mb-4">
@@ -92,8 +109,7 @@
 
 
 
-<!-- Выполняемые работы -->
-{% include 'components/Work_type_home.html' %}
+
 
 
 <!-- Расценки на работы -->
@@ -157,75 +173,166 @@
 
 
 
-
-
-
 <section class="content-card p-4 p-lg-5 mb-4">
-    <h2 class="section-title">Почему выбирают нас в {{ city.name }}</h2>
-    <ul class="mb-4">
-        <li>Опытные мастера и профильное оборудование.</li>
-        <li>Точность работ и аккуратность на объекте.</li>
-        <li>Прозрачная смета и официальная гарантия.</li>
-        <li>Работаем с частными клиентами и бизнесом.</li>
-    </ul>
-    <h3 class="h5">Как мы работаем</h3>
-    <ol class="mb-0">
-        <li>Принимаем заявку и уточняем задачу.</li>
-        <li>Выезжаем на замер и согласуем смету.</li>
-        <li>Выполняем работы и сдаем объект.</li>
-    </ol>
+<h2 class="section-title">{{ city.choose_as_h2|safe }}</h2>
+<div class="row g-3">
+{{ city.choose_as|safe }}
+</div>
 </section>
+
 
 
 {% include 'components/lead_form_gorizont.html' %}
 
 
+
+
+
 <section class="content-card p-4 p-lg-5 mb-4">
-    <h2 class="section-title">Частые вопросы</h2>
-    <div class="accordion" id="faqHome">
-        {% for faq_item in city.faqs.all|slice:":6" %}
-        <div class="accordion-item">
-            <h3 class="accordion-header">
-                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq{{ forloop.counter }}">
-                    {{ faq_item.question }}
-                </button>
-            </h3>
-            <div id="faq{{ forloop.counter }}" class="accordion-collapse collapse" data-bs-parent="#faqHome">
-                <div class="accordion-body">{{ faq_item.answer|truncatechars:260 }}</div>
+<h2 class="section-title">{{ city.useful_h2|safe }}</h2>
+<div class="row g-3">
+{{ city.useful|safe  }}
+</div>
+</section>
+
+
+
+<section class="content-card p-4 p-lg-5 mb-4">
+    <h2 class="section-title">{{ city.homepage_advantages_h2|safe }}</h2>
+        <div class="row g-3">
+{{ city.homepage_advantages|safe  }}
+</div>
+</section>
+
+
+<!-- Примеры работ -->
+ <section class="content-card p-4 p-lg-5 mb-4">
+    <h2 class="section-title mb-4">
+        Последние выполненные объекты
+    </h2>
+    <div class="row g-3">
+        {% for case in portfolio_cases %}
+        <div class="col-md-6 col-lg-4">
+            <a href="{{ case.get_absolute_url }}"
+               class="text-decoration-none">
+                <div class="border rounded-4 p-4 h-100 bg-light">
+                    {% if case.image %}
+                        <img
+                            src="{{ case.image.url }}"
+                            alt="{{ case.title }}"
+                            title="{{ case.title }}"
+                            loading="lazy"
+                            class="img-fluid rounded-3 mb-3">
+                        {% else %}
+                        <img
+                            src="/media/defaults/no-image.webp"
+                            alt="{{ case.title }}"
+                            loading="lazy">
+                    {% endif %}
+
+                    <h3 class="h5 text-dark mb-2">
+                        {{ case.title }}
+                    </h3>
+
+                    <p class="text-secondary mb-3">
+                        {{ case.short_description|truncatechars:120 }}
+                    </p>
+
+                    {% if case.address %}
+                    <div class="small text-muted">
+                        📍 {{ case.address }}
+                    </div>
+                    {% endif %}
+
+                </div>
+
+            </a>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+</section>
+
+
+<!-- Отзывы -->
+{% if reviews %}
+<section class="content-card p-4 p-lg-5 mb-4">
+    <h2 class="section-title mb-4">
+        Отзывы клиентов
+    </h2>
+    <div class="row g-4">
+        {% for review in reviews %}
+        <div class="col-md-6">
+            <div class="border rounded-4 p-4 h-100 bg-light">
+                <div class="mb-2">
+                    {% for i in "12345" %}
+                        {% if forloop.counter <= review.rating %}
+                            ⭐
+                        {% endif %}
+                    {% endfor %}
+                </div>
+                <p class="mb-3">
+                    {{ review.text }}
+                </p>
+                <strong>
+                    {{ review.author }}
+                </strong>
+                {% if review.city %}
+                <div class="small text-muted">
+                    {{ review.city.name }}
+                </div>
+                {% endif %}
             </div>
         </div>
-        {% empty %}
-        <p class="muted mb-0">FAQ будет заполнен через админ-панель.</p>
         {% endfor %}
-    </div>
+    </div><br>
+        <div class="col-md-6">
+            <div class="border rounded-4 p-4 h-100 bg-light">
+                <div class="mb-2">
+                    {% for i in "12345" %}⭐{% endfor %}
+                </div>
+                <p class="mb-3">
+                    Делал ремонт - перепланировку в квартире. Заказывал работу по спилу стены. Все выполнены аккуратно и в срок, смета как и договаривалиь, не изменилась. Рекомендую!
+                 </p>
+                                 <strong>Андрей С.</strong><p class="mb-0 muted"></p>
+                                 <p>{{ city.name }}</p>
+            </div><br>
+        </div>
 </section>
+{% endif %}
+
+
+
+<!-- FAQ -->
+{% include 'components/faq.html' %}
+
+
+<!-- FAQ -->
+{% include 'components/global_faq.html' %}
+
+
+<!-- Lead -->
+{% include 'components/contacts.html' %}
+
+
+<!-- CITIES -->
 
 <section class="content-card p-4 p-lg-5 mb-4">
-    <h2 class="section-title">Отзывы клиентов</h2>
-    <div class="row g-3">
-        <div class="col-md-6"><div class="kpi-card"><strong>Алексей, {{ city.name }}</strong><p class="mb-0 muted">Работы выполнены аккуратно и в срок, смета не изменилась.</p></div></div>
-        <div class="col-md-6"><div class="kpi-card"><strong>Марина, {{ city.name }}</strong><p class="mb-0 muted">Оперативно приехали, проконсультировали и сделали качественно.</p></div></div>
+    <h2 class="section-title mb-4">
+        Наши представители есть в городах:
+    </h2>
+    <div class="d-flex flex-wrap gap-2">
+{% for city in cities %}
+    <a href="{% if city.is_main %}/{% else %}/{{ city.slug }}/{% endif %}"
+       class="btn btn-outline-secondary btn-sm">
+        {{ city.name }}
+    </a>
+
+{% endfor %}
     </div>
-</section>
-
-
-    <!-- Popular FAQ -->
-    {% if section == 'popular_faq' %}
-        {% include 'components/popular_faq.html' %}
-    {% endif %}
-
-
-
-<section class="content-card p-4 p-lg-5 mb-4">
-    <h2 class="section-title">Полезная информация</h2>
-    <p class="mb-0">Мы работаем по всему городу {{ city.name }} и ближайшим районам. По каждому объекту подбираем оптимальную технологию и рассчитываем стоимость до начала работ.</p>
-</section>
-
-<section class="content-card p-4 p-lg-5">
-    <h2 class="section-title">Контакты</h2>
-    <p><strong>Телефон:</strong> {{ city.phone|default:"уточняйте у менеджера" }}</p>
-    <p><strong>Адрес:</strong> {{ city.address|default:"работаем по всему городу и области" }}</p>
-    {% if city.price_text %}<p><strong>Цены:</strong> {{ city.price_text }}</p>{% endif %}
 </section>
 
 {% endblock %}

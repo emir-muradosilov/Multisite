@@ -32,17 +32,21 @@ from cities.views import city_home
 
 def service_page(
     request,
-    service_slug,
+    service_slug=None,
     city_slug=None,
-    page_slug=None
+    page_slug=None,
 ):
+
+    # =====================================================
+    # CITY
+    # =====================================================
 
     if city_slug:
 
         city = get_object_or_404(
             City,
             slug=city_slug,
-            is_active=True
+            is_active=True,
         )
 
     else:
@@ -50,42 +54,59 @@ def service_page(
         city = get_object_or_404(
             City,
             is_main=True,
-            is_active=True
+            is_active=True,
+        )
+    if service_slug is None:
+        raise Http404("Service slug is required.")
+
+    # =====================================================
+    # ГЛАВНАЯ СТРАНИЦА ГОРОДА
+    # =====================================================
+
+    if service_slug is None:
+
+        # открываем главную услугу города
+        page = get_object_or_404(
+            ServicePage.objects.select_related("city"),
+            city=city,
+            is_main=True,
+            parent__isnull=True,
+            is_published=True,
         )
 
+        parent = page
+
     # =====================================================
-    # PAGE
+    # ПОДСТРАНИЦА
     # =====================================================
 
-    if page_slug:
-
-        # CHILD PAGE
+    elif page_slug:
 
         page = get_object_or_404(
             ServicePage.objects.select_related(
-                'parent',
-                'city'
+                "parent",
+                "city",
             ),
             city=city,
             parent__slug=service_slug,
             slug=page_slug,
-            is_published=True
+            is_published=True,
         )
 
         parent = page.parent
 
+    # =====================================================
+    # РОДИТЕЛЬСКАЯ УСЛУГА
+    # =====================================================
+
     else:
 
-        # PARENT PAGE
-
         page = get_object_or_404(
-            ServicePage.objects.select_related(
-                'city'
-            ),
+            ServicePage.objects.select_related("city"),
             city=city,
             slug=service_slug,
             parent__isnull=True,
-            is_published=True
+            is_published=True,
         )
 
         parent = page
@@ -114,23 +135,36 @@ def service_page(
     # =====================================================
     # FAQ
     # =====================================================
+    main_city = City.objects.get(
+        is_main=True,
+        is_active=True,
+    )
 
-    faqs = FAQ.objects.filter(
-        city=city,
-        related_services=parent
-    ).distinct()[:8]
+    faqs = (
+        FAQ.objects.filter(
+            city=main_city,
+            related_services__template=parent.template,
+            is_published=True,
+        )
+        .distinct()[:8]
+    )
+
     generated_faqs = generate_faqs(
-    page,
-    city
-)
-
-    # fallback
+        page,
+        city,
+    )
 
     if not faqs.exists():
 
         faqs = FAQ.objects.filter(
-            city=city
+            city=main_city,
+            is_published=True,
         )[:8]
+
+    # чтобы ссылки строились для текущего города
+    for faq in faqs:
+        faq._current_city = city
+
 
     # =====================================================
     # CITY DATA
@@ -253,7 +287,6 @@ def service_page(
     contacts = get_city_contacts(city)
 
 
-
     # =====================================================
     # RENDER
     # =====================================================
@@ -298,72 +331,90 @@ def service_page(
 
 def faq_page(
     request,
-    city_slug,
-    faq_slug
+    faq_slug,
+    city_slug=None,
 ):
 
-    faq = get_object_or_404(
-        FAQ.objects.select_related(
-            'city'
-        ).prefetch_related(
-            'related_services'
-        ),
-        city__slug=city_slug,
-        slug=faq_slug
+    if city_slug:
+
+        city = get_object_or_404(
+            City,
+            slug=city_slug,
+            is_active=True,
+        )
+
+    else:
+
+        city = get_object_or_404(
+            City,
+            is_main=True,
+            is_active=True,
+        )
+
+    main_city = City.objects.get(
+        is_main=True,
+        is_active=True,
     )
 
-    city = faq.city
+    faq = get_object_or_404(
+        FAQ.objects.prefetch_related(
+            "related_services",
+        ),
+        city=main_city,
+        slug=faq_slug,
+        is_published=True,
+    )
+
+    faq._current_city = city
 
     canonical_url = request.build_absolute_uri(
-        request.path
+        request.path,
     )
 
-    # =====================================================
-    # RELATED FAQ
-    # =====================================================
-
-    related_faqs = FAQ.objects.filter(
-        city=city
-    ).exclude(
-        id=faq.id
-    )[:6]
-
-    # =====================================================
-    # OTHER CITIES
-    # =====================================================
-
-    other_cities = City.objects.filter(
-        is_active=True
-    ).exclude(
-        id=city.id
-    )[:10]
-
-    # =====================================================
-    # SEO BLOCKS
-    # =====================================================
-
-    seo_blocks = SEOBlock.objects.filter(
-        is_active=True,
-        cities=city
-    ).distinct().order_by(
-        'sort_order'
+    related_faqs = (
+        FAQ.objects.filter(
+            city=main_city,
+            is_published=True,
+        )
+        .exclude(id=faq.id)[:6]
     )
 
-    # =====================================================
-    # RENDER
-    # =====================================================
+    for item in related_faqs:
+        item._current_city = city
+
+    city_faq = GlobalFAQ.objects.filter(
+        is_published=True
+    )
+
+    other_cities = (
+        City.objects.filter(
+            is_active=True
+        )
+        .exclude(id=city.id)
+        .order_by("name")[:10]
+    )
+
+    seo_blocks = (
+        SEOBlock.objects.filter(
+            is_active=True,
+            cities=city,
+        )
+        .distinct()
+        .order_by("sort_order")
+    )
 
     return render(
         request,
-        'pages/faq_page.html',
+        "pages/faq_page.html",
         {
-            'faq': faq,
-            'city': city,
-            'canonical_url': canonical_url,
-            'related_faqs': related_faqs,
-            'other_cities': other_cities,
-            'seo_blocks': seo_blocks,
-        }
+            "faq": faq,
+            "city": city,
+            "city_faq": city_faq,
+            "canonical_url": canonical_url,
+            "related_faqs": related_faqs,
+            "other_cities": other_cities,
+            "seo_blocks": seo_blocks,
+        },
     )
 
 
@@ -373,61 +424,132 @@ def faq_page(
 
 def home(request):
 
-    main_city = City.objects.filter(
+    main_city = get_object_or_404(
+        City,
         is_main=True,
-        is_active=True
-    ).first()
+        is_active=True,
+    )
 
-    if not main_city:
-        raise Http404(
-            'Главный город не назначен'
+    cities = (
+        City.objects
+        .filter(is_active=True)
+        .exclude(id=main_city.id)
+        .order_by("name")[:50]
+    )
+
+    popular_services = (
+        ServicePage.objects
+        .filter(
+            city=main_city,
+            is_published=True,
+            parent__isnull=True,
+            template__is_main=True,
         )
-
-    cities = City.objects.filter(
-        is_active=True
-    ).exclude(
-        id=main_city.id
-    ).order_by(
-        'name'
-    )[:50]
-
-
-    popular_services = ServicePage.objects.filter(
-        city=main_city,
-        is_published=True,
-        parent__isnull=True,
-        template__is_main=True
-        ).select_related(
-            'template'
-        ).order_by(
-            'sort_order'
-        )[:12]
+        .select_related("template")
+        .order_by("sort_order")[:12]
+    )
 
     portfolio_cases = PortfolioCase.objects.filter(
         city=main_city,
-        is_published=True
+        is_published=True,
     )[:3]
 
     reviews = Review.objects.filter(
         city=main_city,
-        is_published=True
+        is_published=True,
     )[:4]
 
-    faqs = GlobalFAQ.objects.filter(is_published=True)
+    faqs = GlobalFAQ.objects.filter(
+        is_published=True
+    )
 
+    contacts = get_city_contacts(main_city)
 
     return render(
         request,
-        'home.html',
+        "home.html",
         {
-            'city': main_city,
-            'main_city': main_city,
-            'cities': cities,
-            'popular_services': popular_services,
-            'portfolio_cases': portfolio_cases,
-            'reviews': reviews,
-            'faqs': faqs,
-        }
+            "city": main_city,
+            "main_city": main_city,
+            "cities": cities,
+            "popular_services": popular_services,
+            "portfolio_cases": portfolio_cases,
+            "reviews": reviews,
+            "faqs": faqs,
+            "contacts": contacts,
+        },
+    )
+
+
+def city_home(
+    request,
+    city_slug,
+):
+
+    city = get_object_or_404(
+        City,
+        slug=city_slug,
+        is_active=True,
+    )
+
+    cities = (
+        City.objects
+        .filter(is_active=True)
+        .exclude(id=city.id)
+        .order_by("name")[:50]
+    )
+
+    popular_services = (
+        ServicePage.objects
+        .filter(
+            city=city,
+            is_published=True,
+            parent__isnull=True,
+            template__is_main=True,
+        )
+        .select_related("template")
+        .order_by("sort_order")[:12]
+    )
+
+    portfolio_cases = PortfolioCase.objects.filter(
+        city=city,
+        is_published=True,
+    )[:3]
+
+    reviews = Review.objects.filter(
+        city=city,
+        is_published=True,
+    )[:4]
+
+    faqs = GlobalFAQ.objects.filter(
+        is_published=True
+    )
+
+    contacts = get_city_contacts(city)
+
+    seo_blocks = (
+        SEOBlock.objects.filter(
+            is_active=True,
+            cities=city,
+        )
+        .distinct()
+        .order_by("sort_order")
+    )
+
+    return render(
+        request,
+        "home.html",
+        {
+            "city": city,
+            "main_city": city,
+            "cities": cities,
+            "popular_services": popular_services,
+            "portfolio_cases": portfolio_cases,
+            "reviews": reviews,
+            "faqs": faqs,
+            "contacts": contacts,
+            "seo_blocks": seo_blocks,
+        },
     )
 
 
@@ -544,3 +666,25 @@ def city_or_service(request, slug):
         service_slug=slug
     )
 
+def city_or_service_2level(request, first, second):
+
+    city = City.objects.filter(
+        slug=first,
+        is_active=True
+    ).first()
+
+    # Если первый сегмент — город
+    if city:
+        return service_page(
+            request,
+            city_slug=first,
+            service_slug=second,
+        )
+
+    # Иначе это Москва:
+    # /demontaj/burenie-v-potolok/
+    return service_page(
+        request,
+        service_slug=first,
+        page_slug=second,
+    )
