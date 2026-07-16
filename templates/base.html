@@ -153,25 +153,13 @@
 
         <div class="header-top">
 
-<div class="header-secondary">
 
-    {% for item in top_menu %}
 
-        <a href="{{ item.url }}"
-           class="nav-link">
-
-            {{ item.title }}
-
-        </a>
-
-    {% endfor %}
-
-</div>
 
 
             <div class="header-left">
 
-                <a class="navbar-brand d-flex align-items-center gap-2" href="/">
+                <a class="navbar-brand d-flex align-items-center gap-2" href="{% if city %}/{{ city.slug }}/{% else %}/{% endif %}">
                     {% if site_settings.logo %}
                     <img src="{{ site_settings.logo.url }}"
                          alt="{{ site_settings.site_name }}"
@@ -214,6 +202,25 @@
         </div>
 
     </div>
+
+
+<!--Menu-->
+<div class="header-pages d-none d-lg-flex">
+
+    {% for item in header_menu %}
+
+        <a href="/{{ menu_city.slug }}/{{ item.slug }}/"
+           class="nav-link">
+
+            {{ item.title }}
+
+        </a>
+
+    {% endfor %}
+
+</div>
+
+
 
     <!-- СТРОКА 2 -->
 
