@@ -66,7 +66,7 @@ INSTALLED_APPS = [
     'django.contrib.sitemaps',
     'cities.apps.CitiesConfig',
     'pages.apps.PagesConfig',
-    'ratelimit',
+#    'django_ratelimit',
     'compressor',
     'ckeditor',
 #    'settings_site',
@@ -223,7 +223,7 @@ STORAGES = {
     },
 
 }
-
+'''
 CACHES = {
     'default': {
         'BACKEND': (
@@ -233,8 +233,13 @@ CACHES = {
         'LOCATION': 'multisite-cache',
     }
 }
-
-
+'''
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'multisite-cache',
+    }
+}
 
 
 APPEND_SLASH = True
