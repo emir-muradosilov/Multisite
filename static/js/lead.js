@@ -37,6 +37,23 @@ document.addEventListener('DOMContentLoaded', function () {
                 console.log('Ответ сервера:', data);
 
                 if (data.success) {
+
+                        // Отправляем цель в Яндекс.Метрику
+    if (typeof ym !== 'undefined') {
+        ym(XXXXXX, 'reachGoal', 'ZAYAVKA');
+        // Можно передать дополнительные параметры, например город:
+        // ym(XXXXXX, 'reachGoal', 'lead_sent', { city: cityName });
+    }
+    // ====== ОТПРАВКА В GOOGLE ANALYTICS 4 ======
+    if (typeof gtag !== 'undefined') {
+        gtag('event', 'form_submit', {
+            'event_category': 'lead',
+            'event_label': 'заявка'
+        });
+        console.log('Событие form_submit отправлено в GA4');
+    }
+    
+
                     // Скрываем форму, показываем success
                     const wrapper = form.closest('.lead-form-wrapper');
                     if (wrapper) {
