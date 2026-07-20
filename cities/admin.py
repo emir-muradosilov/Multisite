@@ -399,6 +399,7 @@ class CityAdmin(admin.ModelAdmin):
                         "name_oblast_where",
                         "is_active",
                         "is_rented",
+                        'is_main',
                     )
                 },
             ),
