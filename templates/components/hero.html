@@ -36,12 +36,10 @@ background-repeat: no-repeat;
                             data-bs-target="#leadModal">
                         Рассчитать стоимость
                     </button>
-
+                    {% if city.phone %}
 <a href="tel:{% firstof contacts.phone city.phone site_settings.default_phone %}"
    class="btn btn-light btn-lg">
-
     Позвонить
-
 </a>
                     {% endif %}
 
