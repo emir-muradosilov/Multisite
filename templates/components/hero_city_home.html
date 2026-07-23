@@ -42,8 +42,8 @@ background-repeat: no-repeat;
                     </button>
 
                     {% if city.phone %}
-                    <a href="tel:{{ city.phone }}"
-                       class="btn btn-light btn-lg">
+<a href="tel:{% firstof contacts.phone city.phone site_settings.default_phone %}"
+   class="btn btn-light btn-lg">
 
                         Позвонить
 
@@ -65,12 +65,12 @@ background-repeat: no-repeat;
 
                     <div class="mb-3">
                         <strong class="textline">Гарантия:</strong><br>
-                        <p class="textline"></p>выполняем строго по ТЗ
+                        <p class="textline">выполняем строго по ТЗ</p>
                     </div>
 
                     <div class="mb-3">
                         <strong class="textline">Профессионализм:</strong><br>
-                        <p class="textline"></p>Предложим варианты под ваши задачи
+                        <p class="textline">Предложим варианты под ваши задачи</p>
                     </div>
                     <div>
 

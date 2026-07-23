@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block title %}
+500 — Внутренняя ошибка сервера
+{% endblock %}
+
+{% block content %}
+
+<section class="container py-5 text-center">
+
+    <div class="py-5">
+
+        <h1 class="display-1 fw-bold text-danger">
+            500
+        </h1>
+
+        <h2 class="mb-4">
+            Что-то пошло не так
+        </h2>
+
+        <p class="text-secondary mb-4">
+            На сервере произошла ошибка.
+            Мы уже получили информацию об этом и постараемся всё исправить.
+        </p>
+
+        <a href="/" class="btn btn-primary btn-lg">
+            Вернуться на главную
+        </a>
+
+    </div>
+
+</section>
+
+{% endblock %}

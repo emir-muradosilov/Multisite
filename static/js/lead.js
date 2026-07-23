@@ -37,10 +37,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 console.log('Ответ сервера:', data);
 
                 if (data.success) {
-
+try {
                         // Отправляем цель в Яндекс.Метрику
     if (typeof ym !== 'undefined') {
-        ym(XXXXXX, 'reachGoal', 'ZAYAVKA');
+        ym(110889642, 'reachGoal', 'ZAYAVKA');
         // Можно передать дополнительные параметры, например город:
         // ym(XXXXXX, 'reachGoal', 'lead_sent', { city: cityName });
     }
@@ -52,7 +52,9 @@ document.addEventListener('DOMContentLoaded', function () {
         });
         console.log('Событие form_submit отправлено в GA4');
     }
-    
+} catch (e) {
+    console.warn('GA4 недоступен:', e);
+}
 
                     // Скрываем форму, показываем success
                     const wrapper = form.closest('.lead-form-wrapper');
@@ -82,10 +84,16 @@ document.addEventListener('DOMContentLoaded', function () {
                     }
                     alert(errorMsg);
                 }
-            } catch (error) {
-                console.error('Fetch error:', error);
-                alert('Ошибка отправки. Проверьте подключение к интернету.');
-            }
+} catch (error) {
+    console.error(error);
+
+    alert(
+        'Ошибка:\n\n' +
+        error.name +
+        '\n\n' +
+        error.message
+    );
+}
         });
     });
 });

@@ -31,7 +31,6 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 
-
 sitemaps = {
     'static': StaticSitemap,
 #    'cities': CitySitemap,
@@ -40,6 +39,7 @@ sitemaps = {
 }
 
 urlpatterns = [
+
     path('admin/', admin.site.urls),
     path('', include('tenants.urls')),
     
