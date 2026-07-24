@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
 
             const formData = new FormData(form);
-            const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+            const csrfToken = form.querySelector('[name=csrfmiddlewaretoken]').value;
 
             try {
                 const response = await fetch('/lead/create/', {

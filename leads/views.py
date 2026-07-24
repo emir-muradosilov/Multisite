@@ -15,6 +15,9 @@ from .services import send_telegram_message, is_duplicate_lead, send_lead_email
 #from ratelimit.decorators import ratelimit
 from django_ratelimit.decorators import ratelimit
 #from ratelimit.decorators import ratelimit
+import logging
+
+logger = logging.getLogger(__name__)
 
 @ratelimit(
     key='ip',
@@ -22,6 +25,14 @@ from django_ratelimit.decorators import ratelimit
     block=True
 )
 def create_lead(request, city_slug=None):
+
+    logger.info(
+    "Lead request path=%s city_slug=%s ajax=%s",
+    request.path,
+    city_slug,
+    request.headers.get("X-Requested-With"),
+)
+
 
     policy_accept = request.POST.get('policy_accept')
 
@@ -40,7 +51,7 @@ def create_lead(request, city_slug=None):
     if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
 
         city_id = request.POST.get('city')
-
+        logger.info("city_id=%s", city_id)
         city = get_object_or_404(
             City,
             id=city_id
@@ -147,10 +158,17 @@ def create_lead(request, city_slug=None):
             # =====================================================
             # Send to email
             # =====================================================
+            try:
+#                send_lead_email(lead)
+                pass
+            except Exception as e:
+                logger.exception(
+                "Failed to send lead email. Lead id=%s",
+                lead.id,)
 
-            send_lead_email(lead)
 
-            # =====================================================
+            # ========================
+            # =============================
             # TELEGRAM MESSAGE
             # =====================================================
 
@@ -294,7 +312,7 @@ def create_lead(request, city_slug=None):
             # =====================================================
 
             if is_duplicate_lead(lead.phone):
-
+                logger.info("Returning HTML page")
                 return render(
                     request,
                     'leads/create_lead.html',
@@ -362,7 +380,7 @@ def create_lead(request, city_slug=None):
     else:
 
         form = LeadForm()
-
+    logger.info("Returning HTML page")
     return render(
         request,
         'leads/create_lead.html',
@@ -374,7 +392,7 @@ def create_lead(request, city_slug=None):
     )
 
 def success(request):
-
+    logger.info("Returning HTML page")
     return render(
         request,
         'leads/success.html'
