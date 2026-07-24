@@ -46,7 +46,7 @@ def resolve_two_levels(
     first,
     second,
 ):
-
+    print("resolve_two_levels:", first, second)
     if first in SYSTEM_SLUGS:
         raise Http404()
 
@@ -71,5 +71,32 @@ def resolve_two_levels(
 
 
 
+def resolve_three_levels(
+    request,
+    first,
+    second,
+    third,
+):
+    if first in SYSTEM_SLUGS:
+        raise Http404()
 
+    city = City.objects.filter(
+        slug=first,
+        is_active=True,
+    ).first()
+
+    # /krasnodar/almaznoe-burenie/podstranica/
+    if city:
+
+        return service_page(
+            request,
+            city_slug=first,
+            service_slug=second,
+            page_slug=third,
+        )
+
+    # На будущее.
+    # Если позже появятся URL вида:
+    # /service/category/page/
+    raise Http404()
 

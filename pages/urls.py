@@ -11,6 +11,7 @@ from .views import (
 from .router import (
     resolve_one_level,
     resolve_two_levels,
+    resolve_three_levels,
 )
 
 
@@ -68,27 +69,6 @@ urlpatterns = [
         name="district_service_page",
     ),
 
-    # =====================================================
-    # Подстраницы услуги города
-    # /krasnodar/burenie/podusluga/
-    # =====================================================
-
-    path(
-        "<slug:city_slug>/<slug:service_slug>/<slug:page_slug>/",
-        service_page,
-        name="service_subpage",
-    ),
-
-    # =====================================================
-    # Услуга города
-    # /krasnodar/burenie/
-    # =====================================================
-
-    path(
-        "<slug:city_slug>/<slug:service_slug>/",
-        service_page,
-        name="service_page",
-    ),
 
     # =====================================================
     # Универсальный роутер (2 уровня)
@@ -98,6 +78,12 @@ urlpatterns = [
     # Город:
     # /krasnodar/
     # =====================================================
+
+    path(
+    "<slug:first>/<slug:second>/<slug:third>/",
+    resolve_three_levels,
+    name="router_three_levels",
+),
 
     path(
         "<slug:first>/<slug:second>/",
@@ -116,4 +102,8 @@ urlpatterns = [
         resolve_one_level,
         name="router_one_level",
     ),
+
+
+
+
 ]

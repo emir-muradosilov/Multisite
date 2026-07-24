@@ -36,7 +36,11 @@ def service_page(
     city_slug=None,
     page_slug=None,
 ):
-
+    print(
+        f"city_slug={city_slug}",
+        f"service_slug={service_slug}",
+        f"page_slug={page_slug}",
+    )
     # =====================================================
     # CITY
     # =====================================================
@@ -63,24 +67,12 @@ def service_page(
     # ГЛАВНАЯ СТРАНИЦА ГОРОДА
     # =====================================================
 
-    if service_slug is None:
-
-        # открываем главную услугу города
-        page = get_object_or_404(
-            ServicePage.objects.select_related("city"),
-            city=city,
-            is_main=True,
-            parent__isnull=True,
-            is_published=True,
-        )
-
-        parent = page
-
+    
     # =====================================================
     # ПОДСТРАНИЦА
     # =====================================================
 
-    elif page_slug:
+    if page_slug:
 
         page = get_object_or_404(
             ServicePage.objects.select_related(
