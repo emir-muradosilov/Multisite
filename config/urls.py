@@ -29,6 +29,7 @@ from pages.sitemaps import (
 
 from django.conf import settings
 from django.conf.urls.static import static
+from django.views.generic import RedirectView
 
 
 sitemaps = {
@@ -51,7 +52,7 @@ urlpatterns = [
     path('sitemap.xml', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
     path('robots.txt', robots_txt, name='robots_txt'),
     
-    
+
 ]
 
 urlpatterns += static(

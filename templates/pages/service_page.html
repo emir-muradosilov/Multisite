@@ -26,72 +26,80 @@
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "Service",
-  "name": "{{ page.title|escapejs }}",
-  "areaServed": "{{ city.name|escapejs }}",
-  "description": "{{ page.seo_description|default:page.title|escapejs }}"
-}
-</script>
+  "@graph": [
 
-
-{% if reviews %}
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "Service",
-
-  "name": "{{ page.title|escapejs }}",
-
-  "aggregateRating": {
-    "@type": "AggregateRating",
-    "ratingValue": "5",
-    "reviewCount": "{{ reviews|length }}"
-  },
-
-  "review": [
-
-    {% for review in reviews %}
     {
-      "@type": "Review",
+      "@type": "LocalBusiness",
+      "@id": "{{ canonical_url }}#business",
 
-      "author": {
-        "@type": "Person",
-        "name": "{{ review.author|escapejs }}"
+      "name": "{{ contacts.company_name|default:city.name|escapejs }}",
+      "telephone": "{{ contacts.phone|escapejs }}",
+
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "{{ city.name|escapejs }}",
+        "streetAddress": "{{ contacts.address|escapejs }}"
       },
 
-      "reviewRating": {
-        "@type": "Rating",
-        "ratingValue": "{{ review.rating }}"
+      "areaServed": "{{ city.name|escapejs }}",
+      "openingHours": "{{ contacts.working_hours|escapejs }}",
+      "priceRange": "{{ city.price_text|default:'₽₽'|escapejs }}"
+    },
+
+    {
+      "@type": "Service",
+      "@id": "{{ canonical_url }}#service",
+
+      "name": "{{ page.title|escapejs }}",
+      "description": "{{ page.seo_description|default:page.title|escapejs }}",
+
+      "provider": {
+        "@id": "{{ canonical_url }}#business"
       },
 
-      "reviewBody": "{{ review.text|striptags|escapejs }}"
-    }{% if not forloop.last %},{% endif %}
+      "areaServed": {
+        "@type": "City",
+        "name": "{{ city.name|escapejs }}"
+      }
 
-    {% endfor %}
+      {% if reviews %},
+
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "5",
+        "reviewCount": "{{ reviews|length }}"
+      },
+
+      "review": [
+
+        {% for review in reviews %}
+        {
+          "@type": "Review",
+
+          "author": {
+            "@type": "Person",
+            "name": "{{ review.author|escapejs }}"
+          },
+
+          "reviewRating": {
+            "@type": "Rating",
+            "ratingValue": "{{ review.rating }}"
+          },
+
+          "reviewBody": "{{ review.text|striptags|escapejs }}"
+        }{% if not forloop.last %},{% endif %}
+
+        {% endfor %}
+
+      ]
+
+      {% endif %}
+
+    }
+
   ]
 }
 </script>
-{% endif %}
-
-
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "LocalBusiness",
-  "name": "{{ contacts.company_name|default:city.name|escapejs }}",
-  "image": "",
-  "telephone": "{{ contacts.phone|escapejs }}",
-  "address": {
-    "@type": "PostalAddress",
-    "addressLocality": "{{ city.name|escapejs }}",
-    "streetAddress": "{{ contacts.address|escapejs }}"
-  },
-  "areaServed": "{{ city.name|escapejs }}",
-  "openingHours": "{{ contacts.working_hours|escapejs }}",
-  "priceRange": "{{ city.price_text|default:'₽₽'|escapejs }}"
-}
-</script>
-
 
 
 
