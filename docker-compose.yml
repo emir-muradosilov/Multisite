@@ -2,6 +2,8 @@ services:
   db:
     image: postgres:15
 
+    restart: unless-stopped
+
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
@@ -18,6 +20,8 @@ services:
 
   web:
     build: .
+
+    restart: unless-stopped
 
     volumes:
       - ./media:/app/media

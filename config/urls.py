@@ -19,7 +19,7 @@ from django.urls import path
 from django.urls import include
 from django.contrib.sitemaps.views import sitemap
 #from cities.sitemaps import CitySitemap
-from .views import robots_txt
+from .views import robots_txt, favicon_view
 from pages.sitemaps import (
     StaticSitemap,
     CitySitemap,
@@ -52,7 +52,7 @@ urlpatterns = [
     path('sitemap.xml', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
     path('robots.txt', robots_txt, name='robots_txt'),
     
-
+    path("favicon.ico", favicon_view, name="favicon"),
 ]
 
 urlpatterns += static(
