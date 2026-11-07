@@ -10,7 +10,7 @@ CMS-платформа на Django с динамической мультиго�
 
 ## 🛠 Стек технологий
 * **Backend:** Python 3.11+, Django, Django ORM
-* **Database:** PostgreSQL (или SQLite, укажи свою актуальную БД)
+* **Database:** PostgreSQL
 * **DevOps & Infra:** Docker, Docker Compose, Nginx (как reverse-proxy), Gunicorn, Linux (Ubuntu/Debian)
 * **Frontend:** HTML5, CSS3, JavaScript (интеграция готовых шаблонов через Django Templates)
 
